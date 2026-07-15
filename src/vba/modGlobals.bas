@@ -39,38 +39,26 @@ Public Function NewTextDictionary() As Object
 End Function
 
 Public Function LoadPhrases() As Collection
-    Const MISSING_VALUE As String = "{FORMULAR_PRO_PREDVYPLNENI_MISSING}"
-
     Dim result As New Collection
     Dim raw As String
-    Dim legacyRaw As String
     Dim parts() As String
     Dim i As Long
     Dim phrase As String
-    Dim initializeDefaults As Boolean
 
     raw = GetSetting( _
         APP_NAME, _
         APP_SECTION, _
         PHRASES_KEY, _
-        MISSING_VALUE _
+        vbNullString _
     )
 
-    If StrComp(raw, MISSING_VALUE, vbBinaryCompare) = 0 Then
-        legacyRaw = GetSetting( _
+    If Len(raw) = 0 Then
+        raw = GetSetting( _
             APP_NAME, _
             APP_SECTION, _
             LEGACY_TERMS_KEY, _
             vbNullString _
         )
-
-        If Len(legacyRaw) > 0 Then
-            raw = legacyRaw
-        Else
-            raw = vbNullString
-        End If
-
-        initializeDefaults = True
     End If
 
     If Len(raw) > 0 Then
@@ -85,15 +73,20 @@ Public Function LoadPhrases() As Collection
         Next i
     End If
 
-    If initializeDefaults Then
+    ' Povinné, pevně definované fráze.
+    ' AddUnique zajistí, že v seznamu nevzniknou duplicity.
         AddUnique result, "Vypracoval:"
         AddUnique result, "Ověřil a schválil:"
         AddUnique result, "Rozdělovník:"
         AddUnique result, "První vydání:"
         AddUnique result, "Číslo/datum revize:"
+        AddUnique result, "Zákazník:"
+        AddUnique result, "Číslo odlitku:"
+        AddUnique result, "Název odlitku:"
+        AddUnique result, "Operace:"
+        AddUnique result, "Stroj:"
 
-        SavePhrases result
-    End If
+    SavePhrases result
 
     Set LoadPhrases = result
 End Function
