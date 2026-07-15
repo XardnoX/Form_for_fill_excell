@@ -1,0 +1,23 @@
+# Vygenerované sestavení
+/Build/
+/Output/
+
+# Binární artefakty vytvořené mimo standardní složky
+*.xlam
+*.xlsm
+*.exe
+*_SHA256.txt
+
+# Logy a dočasné soubory
+*.log
+*.tmp
+~$*
+
+# Podepisovací materiály nikdy necommitovat
+*.pfx
+*.p12
+*.snk
+
+# Lokální nastavení editorů
+.vscode/
+.idea/
