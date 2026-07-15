@@ -1,11 +1,11 @@
-VERSION 5.00
+ÔªøVERSION 5.00
 Begin VB.UserForm frmReview
-   Caption         =   "Kontrola proveden˝ch zmÏn"
+   Caption         =   "Kontrola proveden√Ωch zmƒõn"
    ClientHeight    =   6000
    ClientWidth     =   11400
    StartUpPosition =   1
    Begin VB.CommandButton cmdFinish
-      Caption         =   "DokonËit"
+      Caption         =   "Dokonƒçit"
       Default         =   -1
       Height          =   420
       Left            =   9720
@@ -13,14 +13,14 @@ Begin VB.UserForm frmReview
       Width           =   1440
    End
    Begin VB.CommandButton cmdUndoAll
-      Caption         =   "Vr·tit vöe"
+      Caption         =   "Vr√°tit v≈°e"
       Height          =   420
       Left            =   8280
       Top             =   5340
       Width           =   1320
    End
    Begin VB.CommandButton cmdUndo
-      Caption         =   "Zruöit zmÏnu"
+      Caption         =   "Zru≈°it zmƒõnu"
       Height          =   420
       Left            =   6600
       Top             =   5340
@@ -34,7 +34,7 @@ Begin VB.UserForm frmReview
       Width           =   1320
    End
    Begin VB.CommandButton cmdGoTo
-      Caption         =   "P¯ejÌt na buÚku"
+      Caption         =   "P≈ôej√≠t na bu≈àku"
       Height          =   420
       Left            =   3360
       Top             =   5340
@@ -64,7 +64,7 @@ End Sub
 
 Private Function SelectedIndex() As Long
     If lstChanges.ListIndex < 0 Then
-        MsgBox "Nejprve vyberte zmÏnu.", vbInformation, TOOL_TITLE
+        MsgBox "Nejprve vyberte zmƒõnu.", vbInformation, TOOL_TITLE
     Else
         SelectedIndex = lstChanges.ListIndex + 1
     End If
@@ -86,10 +86,10 @@ Private Sub cmdDetail_Click()
     If index = 0 Then Exit Sub
     Set record = gChanges(index)
     MsgBox "List: " & record.SheetName & vbCrLf & _
-           "BuÚka: " & record.CellAddress & vbCrLf & _
-           "SlovnÌ spojenÌ: " & record.Phrase & vbCrLf & _
-           "P˘vodnÌ hodnota: " & SafeText(record.OldValue) & vbCrLf & _
-           "Nov· hodnota: " & SafeText(record.NewValue), vbInformation, "Detail zmÏny"
+           "Bu≈àka: " & record.CellAddress & vbCrLf & _
+           "Slovn√≠ spojen√≠: " & record.Phrase & vbCrLf & _
+           "P≈Øvodn√≠ hodnota: " & SafeText(record.OldValue) & vbCrLf & _
+           "Nov√° hodnota: " & SafeText(record.NewValue), vbInformation, "Detail zmƒõny"
 End Sub
 
 Private Sub cmdUndo_Click()
@@ -101,7 +101,7 @@ End Sub
 Private Sub cmdUndoAll_Click()
     UndoAllChanges
     RefreshList
-    MsgBox "Vöechny dostupnÈ zmÏny byly vr·ceny.", vbInformation, TOOL_TITLE
+    MsgBox "V≈°echny dostupn√© zmƒõny byly vr√°ceny.", vbInformation, TOOL_TITLE
 End Sub
 
 Private Sub cmdFinish_Click()
@@ -112,6 +112,6 @@ End Sub
 Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
     If CloseMode = 0 Then
         Cancel = True
-        MsgBox "Kontrolu ukonËete tlaËÌtkem DokonËit.", vbInformation, TOOL_TITLE
+        MsgBox "Kontrolu ukonƒçete tlaƒç√≠tkem Dokonƒçit.", vbInformation, TOOL_TITLE
     End If
 End Sub

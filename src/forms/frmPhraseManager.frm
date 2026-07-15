@@ -1,11 +1,11 @@
-VERSION 5.00
+ï»¿VERSION 5.00
 Begin VB.UserForm frmPhraseManager
-   Caption         =   "Správa slovních spojení"
+   Caption         =   "SprÃ¡va slovnÃ­ch spojenÃ­"
    ClientHeight    =   5400
    ClientWidth     =   7800
    StartUpPosition =   1
    Begin VB.CommandButton cmdClose
-      Caption         =   "Zavøít"
+      Caption         =   "ZavÅ™Ã­t"
       Height          =   420
       Left            =   6360
       Top             =   4740
@@ -19,14 +19,14 @@ Begin VB.UserForm frmPhraseManager
       Width           =   1200
    End
    Begin VB.CommandButton cmdRename
-      Caption         =   "Pøejmenovat"
+      Caption         =   "PÅ™ejmenovat"
       Height          =   420
       Left            =   4920
       Top             =   4020
       Width           =   1320
    End
    Begin VB.CommandButton cmdAdd
-      Caption         =   "Pøidat"
+      Caption         =   "PÅ™idat"
       Height          =   420
       Left            =   3720
       Top             =   4020
@@ -45,7 +45,7 @@ Begin VB.UserForm frmPhraseManager
       Width           =   7320
    End
    Begin VB.Label lblInfo
-      Caption         =   "Uložená slovní spojení"
+      Caption         =   "UloÅ¾enÃ¡ slovnÃ­ spojenÃ­"
       Height          =   300
       Left            =   240
       Top             =   180
@@ -80,7 +80,7 @@ Private Sub cmdAdd_Click()
     beforeCount = mPhrases.Count
     AddUnique mPhrases, phrase
     If mPhrases.Count = beforeCount Then
-        MsgBox "Toto slovní spojení již existuje.", vbInformation, TOOL_TITLE
+        MsgBox "Toto slovnÃ­ spojenÃ­ jiÅ¾ existuje.", vbInformation, TOOL_TITLE
         Exit Sub
     End If
     SavePhrases mPhrases

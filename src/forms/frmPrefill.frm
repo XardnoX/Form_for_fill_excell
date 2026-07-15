@@ -1,11 +1,11 @@
-VERSION 5.00
+ÔªøVERSION 5.00
 Begin VB.UserForm frmPrefill
-   Caption         =   "Formul·¯ pro p¯edvyplnÏnÌ"
+   Caption         =   "Formul√°≈ô pro p≈ôedvyplnƒõn√≠"
    ClientHeight    =   7800
    ClientWidth     =   11200
    StartUpPosition =   1
    Begin VB.CommandButton cmdSave
-      Caption         =   "PouûÌt zmÏny"
+      Caption         =   "Pou≈æ√≠t zmƒõny"
       Default         =   -1
       Height          =   420
       Left            =   9360
@@ -13,21 +13,21 @@ Begin VB.UserForm frmPrefill
       Width           =   1440
    End
    Begin VB.CommandButton cmdCancel
-      Caption         =   "Zruöit"
+      Caption         =   "Zru≈°it"
       Height          =   420
       Left            =   8040
       Top             =   7140
       Width           =   1200
    End
    Begin VB.CommandButton cmdManage
-      Caption         =   "Spravovat slovnÌ spojenÌ"
+      Caption         =   "Spravovat slovn√≠ spojen√≠"
       Height          =   420
       Left            =   3240
       Top             =   6420
       Width           =   2400
    End
    Begin VB.CommandButton cmdRefresh
-      Caption         =   "Obnovit v˝skyty"
+      Caption         =   "Obnovit v√Ωskyty"
       Height          =   420
       Left            =   240
       Top             =   6420
@@ -41,7 +41,7 @@ Begin VB.UserForm frmPrefill
       Width           =   2640
    End
    Begin VB.Frame fraPhrases
-      Caption         =   "Nalezen· slovnÌ spojenÌ a hodnoty"
+      Caption         =   "Nalezen√° slovn√≠ spojen√≠ a hodnoty"
       Height          =   4920
       Left            =   3120
       ScrollBars      =   2
@@ -57,7 +57,7 @@ Begin VB.UserForm frmPrefill
    End
    Begin VB.Label lblHeader
       BackColor       =   &H00726A62&
-      Caption         =   "FORMUL¡ÿ PRO PÿEDVYPLNÃNÕ"
+      Caption         =   "FORMUL√Å≈ò PRO P≈òEDVYPLNƒöN√ç"
       ForeColor       =   &H00FFFFFF&
       Height          =   600
       Left            =   0
@@ -122,11 +122,11 @@ Private Sub RefreshContent()
     Next i
     If mVisiblePhrases.Count = 0 Then
         Set lbl = fraPhrases.Controls.Add("Forms.Label.1", "lblEmpty", True)
-        lbl.Caption = "Na vybran˝ch listech nebylo nalezeno û·dnÈ uloûenÈ slovnÌ spojenÌ."
+        lbl.Caption = "Na vybran√Ωch listech nebylo nalezeno ≈æ√°dn√© ulo≈æen√© slovn√≠ spojen√≠."
         lbl.Left = 18: lbl.Top = 28: lbl.Width = 600
     End If
     fraPhrases.ScrollHeight = y + 18
-    lblCount.Caption = CStr(mVisiblePhrases.Count) & " slovnÌch spojenÌ na " & CStr(gSelectedSheets.Count) & " vybran˝ch listech"
+    lblCount.Caption = CStr(mVisiblePhrases.Count) & " slovn√≠ch spojen√≠ na " & CStr(gSelectedSheets.Count) & " vybran√Ωch listech"
 End Sub
 
 Private Sub cmdRefresh_Click()
@@ -143,7 +143,7 @@ Private Sub cmdSave_Click()
     Dim i As Long, phrase As String, enteredValue As String
     CaptureSelectedSheets
     If gSelectedSheets.Count = 0 Then
-        MsgBox "Vyberte alespoÚ jeden viditeln˝ list.", vbExclamation, TOOL_TITLE
+        MsgBox "Vyberte alespo≈à jeden viditeln√Ω list.", vbExclamation, TOOL_TITLE
         Exit Sub
     End If
 

@@ -59,13 +59,13 @@ CleanExit:
     Application.EnableEvents = oldEvents
     Application.ScreenUpdating = oldScreen
     If gChanges.Count = 0 Then
-        MsgBox "Nebyly provedeny ádné zmìny. Skryté, nevybrané a zamèené listy byly pøeskoèeny.", vbInformation, TOOL_TITLE
+        MsgBox "Nebyly provedeny Å¾Ã¡dnÃ© zmÄ›ny. SkrytÃ©, nevybranÃ© a zamÄenÃ© listy byly pÅ™eskoÄeny.", vbInformation, TOOL_TITLE
     Else
         frmReview.Show
     End If
     Exit Sub
 Fatal:
-    MsgBox "Operaci se nepodaøilo dokonèit: " & Err.Description, vbCritical, TOOL_TITLE
+    MsgBox "Operaci se nepodaÅ™ilo dokonÄit: " & Err.Description, vbCritical, TOOL_TITLE
     Resume CleanExit
 End Sub
 
@@ -123,7 +123,7 @@ Public Sub UndoChange(ByVal index As Long)
     If index < 1 Or index > gChanges.Count Then Exit Sub
     Set record = gChanges(index)
     If gTargetWorkbook.Worksheets(record.SheetName).ProtectContents Then
-        MsgBox "List je nyní zamèenı. Zmìnu nelze zrušit.", vbExclamation, TOOL_TITLE
+        MsgBox "List je nynÃ­ zamÄenÃ½. ZmÄ›nu nelze zruÅ¡it.", vbExclamation, TOOL_TITLE
         Exit Sub
     End If
     RestoreRecord record
