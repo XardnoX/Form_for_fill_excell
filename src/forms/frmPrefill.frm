@@ -1,6 +1,6 @@
 ﻿VERSION 5.00
 Begin VB.UserForm frmPrefill
-   Caption         =   "Formulář pro předvyplnění"
+   Caption         =   "MR_Helper"
    BackColor       =   &H00F4F1ED&
    ClientHeight    =   7500
    ClientWidth     =   9200
@@ -35,9 +35,37 @@ Begin VB.UserForm frmPrefill
       Width           =   2040
    End
    Begin VB.ListBox lstSheets
-      Height          =   4620
+      Height          =   3420
       Left            =   240
       MultiSelect     =   1
+      Top             =   2460
+      Width           =   2040
+   End
+   Begin VB.CheckBox chkAllSheets
+      Caption         =   ""
+      Height          =   300
+      Left            =   240
+      Top             =   2040
+      Value           =   -1
+      Width           =   240
+   End
+   Begin VB.Label lblAllSheets
+      Caption         =   "Vybrat vše / zrušit výběr"
+      Height          =   240
+      Left            =   540
+      Top             =   2070
+      Width           =   1740
+   End
+   Begin VB.TextBox txtSheetSearch
+      Height          =   360
+      Left            =   240
+      Top             =   1560
+      Width           =   2040
+   End
+   Begin VB.Label lblSheetSearch
+      Caption         =   "Hledat list:"
+      Height          =   240
+      Left            =   240
       Top             =   1260
       Width           =   2040
    End
@@ -57,14 +85,22 @@ Begin VB.UserForm frmPrefill
       Width           =   8480
    End
    Begin VB.Label lblHeader
-      BackColor       =   &H00726A62&
-      Caption         =   "FORMULÁŘ PRO PŘEDVYPLNĚNÍ"
-      ForeColor       =   &H00FFFFFF&
+      BackColor       =   &H00FFFFFF&
+      Caption         =   "MR_HELPER"
+      ForeColor       =   &H004F4536&
       Height          =   600
       Left            =   0
       TextAlign       =   2
       Top             =   0
       Width           =   9200
+   End
+   Begin VB.Image imgLogo
+      BackStyle       =   0
+      Height          =   540
+      Left            =   120
+      PictureSizeMode =   3
+      Top             =   30
+      Width           =   960
    End
 End
 Attribute VB_Name = "frmPrefill"
@@ -74,19 +110,26 @@ Private mAllPhrases As Collection
 Private mVisiblePhrases As Collection
 Private mInputs As Collection
 Private mValueHistory As Object
+Private mSheetSelection As Object
+Private mUpdatingSheetControls As Boolean
 
 Private Sub UserForm_Initialize()
     Dim ws As Worksheet
     ApplyVisualStyle
+    ApplyBrandLogo imgLogo
     Set mAllPhrases = LoadPhrases()
     Set mValueHistory = LoadValueHistory()
-    lstSheets.Clear
+    Set mSheetSelection = NewTextDictionary()
     For Each ws In gTargetWorkbook.Worksheets
         If ws.Visible = xlSheetVisible Then
-            lstSheets.AddItem ws.Name
-            lstSheets.Selected(lstSheets.ListCount - 1) = True
+            mSheetSelection(ws.Name) = True
         End If
     Next ws
+    txtSheetSearch.Value = vbNullString
+    mUpdatingSheetControls = True
+    chkAllSheets.Value = True
+    mUpdatingSheetControls = False
+    PopulateSheetList
     RefreshContent
 End Sub
 
@@ -96,8 +139,8 @@ Private Sub ApplyVisualStyle()
     Me.Font.Size = 9
 
     With lblHeader
-        .BackColor = RGB(54, 69, 79)
-        .ForeColor = RGB(255, 255, 255)
+        .BackColor = RGB(255, 255, 255)
+        .ForeColor = RGB(31, 41, 55)
         .Font.Name = "Segoe UI Semibold"
         .Font.Size = 13
         .Font.Bold = True
@@ -108,11 +151,66 @@ Private Sub ApplyVisualStyle()
     fraPhrases.BackColor = RGB(255, 255, 255)
     fraPhrases.ForeColor = RGB(54, 69, 79)
     lstSheets.BackColor = RGB(255, 255, 255)
+    txtSheetSearch.BackColor = RGB(255, 255, 255)
+    lblSheetSearch.ForeColor = RGB(75, 85, 99)
+    lblSheetSearch.Font.Bold = True
+    lblAllSheets.ForeColor = RGB(55, 65, 81)
 
     StyleButton cmdRefresh, False
     StyleButton cmdManage, False
     StyleButton cmdCancel, False
     StyleButton cmdSave, True
+End Sub
+
+Private Sub PopulateSheetList()
+    Dim ws As Worksheet, query As String, index As Long
+    query = LCase$(Trim$(CStr(txtSheetSearch.Value)))
+    mUpdatingSheetControls = True
+    lstSheets.Clear
+    For Each ws In gTargetWorkbook.Worksheets
+        If ws.Visible = xlSheetVisible Then
+            If Len(query) = 0 Or InStr(1, LCase$(ws.Name), query, vbTextCompare) > 0 Then
+                lstSheets.AddItem ws.Name
+                index = lstSheets.ListCount - 1
+                If mSheetSelection.Exists(ws.Name) Then
+                    lstSheets.Selected(index) = CBool(mSheetSelection(ws.Name))
+                End If
+            End If
+        End If
+    Next ws
+    mUpdatingSheetControls = False
+End Sub
+
+Private Sub CaptureDisplayedSheetSelection()
+    Dim i As Long
+    If mSheetSelection Is Nothing Then Exit Sub
+    For i = 0 To lstSheets.ListCount - 1
+        mSheetSelection(lstSheets.List(i)) = lstSheets.Selected(i)
+    Next i
+End Sub
+
+Private Sub txtSheetSearch_Change()
+    If mUpdatingSheetControls Then Exit Sub
+    CaptureDisplayedSheetSelection
+    PopulateSheetList
+End Sub
+
+Private Sub lstSheets_Change()
+    If mUpdatingSheetControls Then Exit Sub
+    CaptureDisplayedSheetSelection
+    mUpdatingSheetControls = True
+    chkAllSheets.Value = False
+    mUpdatingSheetControls = False
+End Sub
+
+Private Sub chkAllSheets_Click()
+    Dim ws As Worksheet, selectAll As Boolean
+    If mUpdatingSheetControls Then Exit Sub
+    selectAll = CBool(chkAllSheets.Value)
+    For Each ws In gTargetWorkbook.Worksheets
+        If ws.Visible = xlSheetVisible Then mSheetSelection(ws.Name) = selectAll
+    Next ws
+    PopulateSheetList
 End Sub
 
 Private Sub StyleButton(ByVal button As Object, ByVal primary As Boolean)
@@ -129,11 +227,14 @@ Private Sub StyleButton(ByVal button As Object, ByVal primary As Boolean)
 End Sub
 
 Private Sub CaptureSelectedSheets()
-    Dim i As Long
+    Dim ws As Worksheet
+    CaptureDisplayedSheetSelection
     Set gSelectedSheets = NewTextDictionary()
-    For i = 0 To lstSheets.ListCount - 1
-        If lstSheets.Selected(i) Then gSelectedSheets(lstSheets.List(i)) = True
-    Next i
+    For Each ws In gTargetWorkbook.Worksheets
+        If ws.Visible = xlSheetVisible And mSheetSelection.Exists(ws.Name) Then
+            If CBool(mSheetSelection(ws.Name)) Then gSelectedSheets(ws.Name) = True
+        End If
+    Next ws
 End Sub
 
 Private Sub RefreshContent()

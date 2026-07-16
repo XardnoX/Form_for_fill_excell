@@ -3,13 +3,13 @@
   <ribbon>
     <tabs>
       <tab idMso="TabHome">
-        <group id="grpPrefillForm" label="Předvyplnění">
-          <button id="btnPrefillForm"
-                  label="Formulář pro předvyplnění"
+        <group id="grpMRHelper" label="MR_Helper">
+          <button id="btnMRHelper"
+                  label="MR_Helper"
                   size="large"
-                  imageMso="TableInsert"
+                  image="MRHelperLogo"
                   onAction="ShowPrefillForm"
-                  screentip="Formulář pro předvyplnění"
+                  screentip="MR_Helper"
                   supertip="Vyhledá uložená slovní spojení v aktivním sešitu a předvyplní hodnoty do buněk vpravo."/>
         </group>
       </tab>

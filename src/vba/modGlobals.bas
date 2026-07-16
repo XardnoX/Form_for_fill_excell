@@ -6,12 +6,15 @@ Public gTargetWorkbook As Workbook
 Public gSelectedSheets As Object
 Public gReturnToPrefill As Boolean
 
-Public Const APP_NAME As String = "FormularProPredvyplneni"
+Public Const APP_NAME As String = "MR_Helper"
+Public Const LEGACY_APP_NAME As String = "FormularProPredvyplneni"
 Public Const APP_SECTION As String = "Settings"
 Public Const PHRASES_KEY As String = "Phrases"
 Public Const LEGACY_TERMS_KEY As String = "Terms"
 Public Const VALUE_HISTORY_KEY As String = "ValueHistory"
-Public Const TOOL_TITLE As String = "Formulář pro předvyplnění"
+Public Const TOOL_TITLE As String = "MR_Helper"
+Public Const LOGO_FILE_NAME As String = "MR_Helper_logo.jpg"
+Public Const ASSET_FOLDER_NAME As String = "MR_Helper_assets"
 
 Public Sub ShowPrefillForm(Optional control As Object)
     If ActiveWorkbook Is Nothing Then Exit Sub
@@ -39,6 +42,23 @@ Public Function NewTextDictionary() As Object
     Set NewTextDictionary = d
 End Function
 
+Public Sub ApplyBrandLogo(ByVal imageControl As Object)
+    Dim logoPath As String
+    On Error Resume Next
+    logoPath = ThisWorkbook.Path & Application.PathSeparator & ASSET_FOLDER_NAME & _
+               Application.PathSeparator & LOGO_FILE_NAME
+    If Dir$(logoPath) = vbNullString Then
+        logoPath = ThisWorkbook.Path & Application.PathSeparator & "assets" & _
+                   Application.PathSeparator & LOGO_FILE_NAME
+    End If
+    If Dir$(logoPath) <> vbNullString Then
+        Set imageControl.Picture = LoadPicture(logoPath)
+        imageControl.PictureSizeMode = 3
+        imageControl.ZOrder 0
+    End If
+    On Error GoTo 0
+End Sub
+
 Public Function LoadPhrases() As Collection
     Dim result As New Collection
     Dim raw As String
@@ -60,6 +80,13 @@ Public Function LoadPhrases() As Collection
             LEGACY_TERMS_KEY, _
             vbNullString _
         )
+    End If
+
+    If Len(raw) = 0 Then
+        raw = GetSetting(LEGACY_APP_NAME, APP_SECTION, PHRASES_KEY, vbNullString)
+        If Len(raw) = 0 Then
+            raw = GetSetting(LEGACY_APP_NAME, APP_SECTION, LEGACY_TERMS_KEY, vbNullString)
+        End If
     End If
 
     If Len(raw) > 0 Then

@@ -1,6 +1,6 @@
 ﻿VERSION 5.00
 Begin VB.UserForm frmReview
-   Caption         =   "Kontrola provedených změn"
+   Caption         =   "MR_Helper – Kontrola provedených změn"
    BackColor       =   &H00F4F1ED&
    ClientHeight    =   6000
    ClientWidth     =   11400
@@ -62,14 +62,22 @@ Begin VB.UserForm frmReview
       Width           =   10920
    End
    Begin VB.Label lblHeader
-      BackColor       =   &H004F4536&
-      Caption         =   "KONTROLA PROVEDENÝCH ZMĚN"
-      ForeColor       =   &H00FFFFFF&
+      BackColor       =   &H00FFFFFF&
+      Caption         =   "MR_HELPER – KONTROLA PROVEDENÝCH ZMĚN"
+      ForeColor       =   &H004F4536&
       Height          =   600
       Left            =   0
       TextAlign       =   2
       Top             =   0
       Width           =   11400
+   End
+   Begin VB.Image imgLogo
+      BackStyle       =   0
+      Height          =   540
+      Left            =   120
+      PictureSizeMode =   3
+      Top             =   30
+      Width           =   960
    End
 End
 Attribute VB_Name = "frmReview"
@@ -77,6 +85,7 @@ Option Explicit
 
 Private Sub UserForm_Initialize()
     ApplyVisualStyle
+    ApplyBrandLogo imgLogo
     RefreshList
 End Sub
 
@@ -85,8 +94,8 @@ Private Sub ApplyVisualStyle()
     Me.Font.Name = "Segoe UI"
     Me.Font.Size = 9
     With lblHeader
-        .BackColor = RGB(54, 69, 79)
-        .ForeColor = RGB(255, 255, 255)
+        .BackColor = RGB(255, 255, 255)
+        .ForeColor = RGB(31, 41, 55)
         .Font.Name = "Segoe UI Semibold"
         .Font.Size = 13
         .Font.Bold = True

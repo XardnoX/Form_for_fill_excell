@@ -10,6 +10,9 @@ Public Function LoadValueHistory() As Object
     Dim history As Object, raw As String, rows() As String, pair() As String, i As Long
     Set history = NewTextDictionary()
     raw = GetSetting(APP_NAME, APP_SECTION, VALUE_HISTORY_KEY, vbNullString)
+    If Len(raw) = 0 Then
+        raw = GetSetting(LEGACY_APP_NAME, APP_SECTION, VALUE_HISTORY_KEY, vbNullString)
+    End If
 
     If Len(raw) > 0 Then
         rows = Split(raw, Chr$(SEP_PHRASE_CODE))

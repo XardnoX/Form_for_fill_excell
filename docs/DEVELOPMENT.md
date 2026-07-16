@@ -17,6 +17,7 @@ Doporučený vývoj probíhá v samostatném `.xlsm` sešitu. Zdrojové soubory 
 - žádné slovní spojení v sešitu,
 - více výskytů stejného spojení,
 - skryté a zamčené listy,
+- filtrování listů podle názvu se zachování výběru a hromadný výběr vše/žádný,
 - sloučené zdrojové i cílové buňky,
 - dva různé výskyty mířící do stejné buňky,
 - původní vzorec v cílové buňce,

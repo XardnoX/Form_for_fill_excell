@@ -1,6 +1,6 @@
 ﻿VERSION 5.00
 Begin VB.UserForm frmPhraseManager
-   Caption         =   "Správa slovních spojení"
+   Caption         =   "MR_Helper – Správa slovních spojení"
    BackColor       =   &H00F4F1ED&
    ClientHeight    =   5400
    ClientWidth     =   7800
@@ -46,14 +46,22 @@ Begin VB.UserForm frmPhraseManager
       Width           =   7320
    End
    Begin VB.Label lblInfo
-      BackColor       =   &H004F4536&
-      Caption         =   "Uložená slovní spojení"
-      ForeColor       =   &H00FFFFFF&
+      BackColor       =   &H00FFFFFF&
+      Caption         =   "MR_HELPER – ULOŽENÁ SLOVNÍ SPOJENÍ"
+      ForeColor       =   &H004F4536&
       Height          =   600
       Left            =   0
       TextAlign       =   2
       Top             =   0
       Width           =   7800
+   End
+   Begin VB.Image imgLogo
+      BackStyle       =   0
+      Height          =   540
+      Left            =   120
+      PictureSizeMode =   3
+      Top             =   30
+      Width           =   960
    End
 End
 Attribute VB_Name = "frmPhraseManager"
@@ -62,6 +70,7 @@ Private mPhrases As Collection
 
 Private Sub UserForm_Initialize()
     ApplyVisualStyle
+    ApplyBrandLogo imgLogo
     ReloadPhrases
 End Sub
 
@@ -70,8 +79,8 @@ Private Sub ApplyVisualStyle()
     Me.Font.Name = "Segoe UI"
     Me.Font.Size = 9
     With lblInfo
-        .BackColor = RGB(54, 69, 79)
-        .ForeColor = RGB(255, 255, 255)
+        .BackColor = RGB(255, 255, 255)
+        .ForeColor = RGB(31, 41, 55)
         .Font.Name = "Segoe UI Semibold"
         .Font.Size = 11
         .Font.Bold = True

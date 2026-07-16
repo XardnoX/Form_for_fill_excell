@@ -6,8 +6,8 @@ $ErrorActionPreference = "Stop"
 $projectRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $buildDirectory = Join-Path $projectRoot "Build"
 $outputDirectory = Join-Path $projectRoot "Output"
-$addinFile = Join-Path $buildDirectory "FormularProPredvyplneni.xlam"
-$installerFile = Join-Path $outputDirectory "FormularProPredvyplneni_Setup.exe"
+$addinFile = Join-Path $buildDirectory "MR_Helper.xlam"
+$installerFile = Join-Path $outputDirectory "MR_Helper_Setup.exe"
 $securityKey = "HKCU:\Software\Microsoft\Office\16.0\Excel\Security"
 
 New-Item -ItemType Directory -Force $buildDirectory, $outputDirectory | Out-Null
@@ -31,7 +31,7 @@ try {
     # Přístup je povolen pouze během sestavení a v finally se obnoví původní stav.
     Set-ItemProperty -Path $securityKey -Name AccessVBOM -Type DWord -Value 1
 
-    Write-Host "[1/3] Sestavuji FormularProPredvyplneni.xlam..."
+    Write-Host "[1/3] Sestavuji MR_Helper.xlam..."
     & (Join-Path $projectRoot "tools\build_xlam.ps1") -Output $addinFile
     if (!(Test-Path -LiteralPath $addinFile)) {
         throw "Soubor XLAM nebyl vytvořen."
@@ -62,8 +62,8 @@ try {
 
     Write-Host "[3/3] Vytvářím kontrolní součet SHA-256..."
     $hash = Get-FileHash -LiteralPath $installerFile -Algorithm SHA256
-    "$($hash.Hash)  FormularProPredvyplneni_Setup.exe" | Set-Content `
-        -LiteralPath (Join-Path $outputDirectory "FormularProPredvyplneni_Setup_SHA256.txt") `
+    "$($hash.Hash)  MR_Helper_Setup.exe" | Set-Content `
+        -LiteralPath (Join-Path $outputDirectory "MR_Helper_Setup_SHA256.txt") `
         -Encoding ASCII
 
     Write-Host "Hotovo: $installerFile"

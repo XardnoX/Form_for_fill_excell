@@ -7,9 +7,11 @@ $sourceRoot = Join-Path $projectRoot "src"
 $vbaRoot = Join-Path $sourceRoot "vba"
 $formsRoot = Join-Path $sourceRoot "forms"
 $ribbonFile = Join-Path $sourceRoot "ribbon\customUI14.xml"
+$logoFile = Join-Path $projectRoot "assets\MR_Helper_logo.jpg"
+$ribbonLogoFile = Join-Path $projectRoot "assets\MR_Helper_ribbon.png"
 
 if ([string]::IsNullOrWhiteSpace($Output)) {
-    $Output = Join-Path $projectRoot "Build\FormularProPredvyplneni.xlam"
+    $Output = Join-Path $projectRoot "Build\MR_Helper.xlam"
 }
 
 $Output = [IO.Path]::GetFullPath($Output)
@@ -23,7 +25,9 @@ $required = @(
     (Join-Path $formsRoot "frmPrefill.frm"),
     (Join-Path $formsRoot "frmPhraseManager.frm"),
     (Join-Path $formsRoot "frmReview.frm"),
-    $ribbonFile
+    $ribbonFile,
+    $logoFile,
+    $ribbonLogoFile
 )
 
 foreach ($file in $required) {
@@ -175,19 +179,27 @@ function Add-PrefillForm {
     # 3 = vbext_ct_MSForm. Formulář se nevytváří importem .frm.
     $component = $VBProject.VBComponents.Add(3)
     $component.Name = "frmPrefill"
-    $component.Properties.Item("Caption").Value = "Formulář pro předvyplnění"
+    $component.Properties.Item("Caption").Value = "MR_Helper"
     $component.Properties.Item("Width").Value = 620
     $component.Properties.Item("Height").Value = 540
     $designer = $component.Designer
 
-    $header = Add-Control $designer "Forms.Label.1" "lblHeader" "FORMULÁŘ PRO PŘEDVYPLNĚNÍ" 0 0 612 44
-    $header.BackColor = 5195062
-    $header.ForeColor = 16777215
+    $header = Add-Control $designer "Forms.Label.1" "lblHeader" "MR_HELPER" 0 0 612 44
+    $header.BackColor = 16777215
+    $header.ForeColor = 3615007
     $header.TextAlign = 2
+    $logo = Add-Control $designer "Forms.Image.1" "imgLogo" $null 8 2 64 36
+    $logo.BackStyle = 0
+    $logo.PictureSizeMode = 3
 
     [void](Add-Control $designer "Forms.Label.1" "lblCount" "" 18 55 565 20)
 
-    $sheets = Add-Control $designer "Forms.ListBox.1" "lstSheets" $null 18 82 136 308
+    [void](Add-Control $designer "Forms.Label.1" "lblSheetSearch" "Hledat list:" 18 82 136 16)
+    [void](Add-Control $designer "Forms.TextBox.1" "txtSheetSearch" $null 18 102 136 24)
+    $allSheets = Add-Control $designer "Forms.CheckBox.1" "chkAllSheets" "" 18 132 14 20
+    $allSheets.Value = $true
+    [void](Add-Control $designer "Forms.Label.1" "lblAllSheets" "Vybrat vše / zrušit výběr" 36 134 116 16)
+    $sheets = Add-Control $designer "Forms.ListBox.1" "lstSheets" $null 18 158 136 232
     $sheets.MultiSelect = 1
 
     $frame = Add-Control $designer "Forms.Frame.1" "fraPhrases" "Nalezená slovní spojení a hodnoty" 160 82 437 308
@@ -211,15 +223,18 @@ function Add-PhraseManagerForm {
     # 3 = vbext_ct_MSForm. Formulář se nevytváří importem .frm.
     $component = $VBProject.VBComponents.Add(3)
     $component.Name = "frmPhraseManager"
-    $component.Properties.Item("Caption").Value = "Správa slovních spojení"
+    $component.Properties.Item("Caption").Value = "MR_Helper – Správa slovních spojení"
     $component.Properties.Item("Width").Value = 520
     $component.Properties.Item("Height").Value = 390
     $designer = $component.Designer
 
-    $managerHeader = Add-Control $designer "Forms.Label.1" "lblInfo" "ULOŽENÁ SLOVNÍ SPOJENÍ" 0 0 512 44
-    $managerHeader.BackColor = 5195062
-    $managerHeader.ForeColor = 16777215
+    $managerHeader = Add-Control $designer "Forms.Label.1" "lblInfo" "MR_HELPER – ULOŽENÁ SLOVNÍ SPOJENÍ" 0 0 512 44
+    $managerHeader.BackColor = 16777215
+    $managerHeader.ForeColor = 3615007
     $managerHeader.TextAlign = 2
+    $managerLogo = Add-Control $designer "Forms.Image.1" "imgLogo" $null 8 2 64 36
+    $managerLogo.BackStyle = 0
+    $managerLogo.PictureSizeMode = 3
     [void](Add-Control $designer "Forms.ListBox.1" "lstPhrases" $null 16 56 470 200)
     [void](Add-Control $designer "Forms.TextBox.1" "txtPhrase" $null 16 285 270 25)
     [void](Add-Control $designer "Forms.CommandButton.1" "cmdAdd" "Přidat" 295 284 60 27)
@@ -237,15 +252,18 @@ function Add-ReviewForm {
     # 3 = vbext_ct_MSForm. Formulář se nevytváří importem .frm.
     $component = $VBProject.VBComponents.Add(3)
     $component.Name = "frmReview"
-    $component.Properties.Item("Caption").Value = "Kontrola provedených změn"
+    $component.Properties.Item("Caption").Value = "MR_Helper – Kontrola provedených změn"
     $component.Properties.Item("Width").Value = 760
     $component.Properties.Item("Height").Value = 440
     $designer = $component.Designer
 
-    $reviewHeader = Add-Control $designer "Forms.Label.1" "lblHeader" "KONTROLA PROVEDENÝCH ZMĚN" 0 0 752 44
-    $reviewHeader.BackColor = 5195062
-    $reviewHeader.ForeColor = 16777215
+    $reviewHeader = Add-Control $designer "Forms.Label.1" "lblHeader" "MR_HELPER – KONTROLA PROVEDENÝCH ZMĚN" 0 0 752 44
+    $reviewHeader.BackColor = 16777215
+    $reviewHeader.ForeColor = 3615007
     $reviewHeader.TextAlign = 2
+    $reviewLogo = Add-Control $designer "Forms.Image.1" "imgLogo" $null 8 2 64 36
+    $reviewLogo.BackStyle = 0
+    $reviewLogo.PictureSizeMode = 3
     [void](Add-Control $designer "Forms.Label.1" "lblCount" "Provedené změny: 0" 16 55 710 20)
     [void](Add-Control $designer "Forms.ListBox.1" "lstChanges" $null 16 82 710 236)
     [void](Add-Control $designer "Forms.CommandButton.1" "cmdBack" "Zpět do formuláře" 16 345 125 28)
@@ -280,6 +298,8 @@ try {
     if ($null -eq $vbProject) {
         throw "Excel nevrátil projekt VBA. Ověřte AccessVBOM."
     }
+
+    $vbProject.Name = "MR_Helper"
 
     # Standardní moduly: 1 = vbext_ct_StdModule.
     [void](Add-VbaComponent $vbProject 1 "modGlobals" (Join-Path $vbaRoot "modGlobals.bas"))
@@ -320,7 +340,7 @@ if (-not (Test-Path -LiteralPath $Output)) {
 }
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
-$tempDirectory = Join-Path $env:TEMP ("FormularProPredvyplneni_" + [guid]::NewGuid())
+$tempDirectory = Join-Path $env:TEMP ("MR_Helper_" + [guid]::NewGuid())
 
 try {
     [IO.Compression.ZipFile]::ExtractToDirectory($Output, $tempDirectory)
@@ -330,6 +350,29 @@ try {
 
     # Ribbon XML se kopíruje bajtově. Nedochází k textovému překódování.
     Copy-Item -LiteralPath $ribbonFile -Destination (Join-Path $customUiDirectory "customUI14.xml") -Force
+
+    $customUiImagesDirectory = Join-Path $customUiDirectory "images"
+    New-Item -ItemType Directory -Force $customUiImagesDirectory | Out-Null
+    Copy-Item -LiteralPath $ribbonLogoFile -Destination (Join-Path $customUiImagesDirectory "MR_Helper_ribbon.png") -Force
+
+    $customUiRelsDirectory = Join-Path $customUiDirectory "_rels"
+    New-Item -ItemType Directory -Force $customUiRelsDirectory | Out-Null
+    $customUiRelationships = New-Object Xml.XmlDocument
+    $customUiRelationships.LoadXml('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="MRHelperLogo" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="images/MR_Helper_ribbon.png"/></Relationships>')
+    $customUiRelationships.Save((Join-Path $customUiRelsDirectory "customUI14.xml.rels"))
+
+    $contentTypesFile = Join-Path $tempDirectory "[Content_Types].xml"
+    $contentTypes = New-Object Xml.XmlDocument
+    $contentTypes.PreserveWhitespace = $true
+    $contentTypes.Load($contentTypesFile)
+    $pngType = $contentTypes.SelectSingleNode("/*[local-name()='Types']/*[local-name()='Default' and @Extension='png']")
+    if ($null -eq $pngType) {
+        $defaultPng = $contentTypes.CreateElement("Default", $contentTypes.DocumentElement.NamespaceURI)
+        $defaultPng.SetAttribute("Extension", "png")
+        $defaultPng.SetAttribute("ContentType", "image/png")
+        [void]$contentTypes.DocumentElement.AppendChild($defaultPng)
+        $contentTypes.Save($contentTypesFile)
+    }
 
     $relationshipsFile = Join-Path $tempDirectory "_rels\.rels"
     $relationships = New-Object Xml.XmlDocument
@@ -364,4 +407,10 @@ finally {
     }
 }
 
+$assetOutputDirectory = Join-Path (Split-Path -Parent $Output) "MR_Helper_assets"
+New-Item -ItemType Directory -Force $assetOutputDirectory | Out-Null
+$logoOutput = Join-Path $assetOutputDirectory "MR_Helper_logo.jpg"
+Copy-Item -LiteralPath $logoFile -Destination $logoOutput -Force
+
 Write-Host "Vytvořeno: $Output"
+Write-Host "Logo: $logoOutput"

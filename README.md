@@ -1,11 +1,15 @@
-# Formulář pro předvyplnění
+# MR_Helper
 
 Kompletní zdrojový projekt Excel VBA Add-inu. Projekt neobsahuje instalační EXE ani předem sestavený XLAM.
+
+Logo formulářů se instaluje do podsložky `MR_Helper_assets`; soubory obrázků se nesmí ukládat přímo do `XLSTART`, protože by je Excel při spuštění zkusil otevřít jako sešity.
+Ribbon používá samostatnou čtvercovou ikonu `assets/MR_Helper_ribbon.png` bez drobného textu, aby značka zůstala čitelná při velikosti 32×32 px.
 
 ## Funkce
 
 - zobrazení pouze slovních spojení nalezených na vybraných viditelných listech,
 - všechny viditelné listy jsou při otevření vybrané,
+- vyhledávání listů podle názvu a hromadný výběr všech/žádného listu,
 - počet výskytů každého slovního spojení,
 - prázdné vstupní pole bez rozbalovacího tlačítka,
 - automatické napovídání podle dříve použitých hodnot při psaní,
@@ -17,7 +21,7 @@ Kompletní zdrojový projekt Excel VBA Add-inu. Projekt neobsahuje instalační 
 
 ## Import do vývojového XLSM
 
-1. Otevřete nový sešit a uložte jej jako `FormularProPredvyplneni_DEV.xlsm`.
+1. Otevřete nový sešit a uložte jej jako `MR_Helper_DEV.xlsm`.
 2. Stiskněte `Alt+F11`.
 3. Importujte postupně soubory `src/vba/*.bas`, `src/vba/*.cls` a `src/forms/*.frm`.
 4. Spusťte makro `ShowPrefillForm` přes `Alt+F8`.

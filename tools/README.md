@@ -9,7 +9,8 @@ powershell -ExecutionPolicy Bypass -File .\tools\build_xlam.ps1
 Výstup:
 
 ```text
-Build\FormularProPredvyplneni.xlam
+Build\MR_Helper.xlam
+Build\MR_Helper_assets\MR_Helper_logo.jpg
 ```
 
 ## XLAM a instalační EXE
@@ -23,8 +24,8 @@ powershell -ExecutionPolicy Bypass -File .\Build-Installer.ps1
 Výstup:
 
 ```text
-Output\FormularProPredvyplneni_Setup.exe
-Output\FormularProPredvyplneni_Setup_SHA256.txt
+Output\MR_Helper_Setup.exe
+Output\MR_Helper_Setup_SHA256.txt
 ```
 
 Požadavky: desktopový Excel pro Windows a Inno Setup 7. Před sestavením musí být Excel zavřený.
