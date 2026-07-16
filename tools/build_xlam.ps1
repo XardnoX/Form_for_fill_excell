@@ -240,6 +240,7 @@ function Add-PhraseManagerForm {
     $managerLogo.BorderStyle = 0
     $managerLogo.PictureSizeMode = 3
     $managerLogo.SpecialEffect = 0
+    [void](Add-Control $designer "Forms.CommandButton.1" "cmdHelp" "?" 480 8 24 24)
     [void](Add-Control $designer "Forms.ListBox.1" "lstPhrases" $null 16 56 470 200)
     [void](Add-Control $designer "Forms.TextBox.1" "txtPhrase" $null 16 285 270 25)
     [void](Add-Control $designer "Forms.CommandButton.1" "cmdAdd" "Přidat" 295 284 60 27)

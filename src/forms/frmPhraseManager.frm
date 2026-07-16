@@ -5,6 +5,13 @@ Begin VB.UserForm frmPhraseManager
    ClientHeight    =   5400
    ClientWidth     =   7800
    StartUpPosition =   1
+   Begin VB.CommandButton cmdHelp
+      Caption         =   "?"
+      Height          =   360
+      Left            =   7200
+      Top             =   120
+      Width           =   360
+   End
    Begin VB.CommandButton cmdImport
       Caption         =   "Import TXT"
       Height          =   420
@@ -122,6 +129,15 @@ Private Sub ApplyVisualStyle()
     StyleManagerButton cmdImport, False
     StyleManagerButton cmdExport, False
     StyleManagerButton cmdClose, False
+    With cmdHelp
+        .BackColor = RGB(255, 255, 255)
+        .ForeColor = RGB(14, 116, 180)
+        .Font.Name = "Segoe UI Semibold"
+        .Font.Size = 10
+        .Font.Bold = True
+        .ControlTipText = "Nápověda"
+        .ZOrder 0
+    End With
 End Sub
 
 Private Sub StyleManagerButton(ByVal button As Object, ByVal primary As Boolean)
@@ -265,6 +281,13 @@ ImportFailed:
     If Not stream Is Nothing Then stream.Close
     On Error GoTo 0
     MsgBox "Import se nepodařil: " & importError, vbExclamation, TOOL_TITLE
+End Sub
+
+Private Sub cmdHelp_Click()
+    MsgBox "Přidání: Napište vše co je obsáhlé v konkrétní buňce (vyhněte se zbytečných mezer a znaků) a klikněte na Přidat." & vbCrLf & vbCrLf & _
+           "Import: Načte jednu frázi z každého řádku; duplicity se přeskočí. Nejlépe načítejte pouze soubory, které byly exportovány." & vbCrLf & vbCrLf & _
+           "Export: Uloží uživatelsky přidaná slovní spojení do .txt souboru.", _
+           vbOKOnly + vbInformation, "Nápověda – slovní spojení"
 End Sub
 
 Private Sub cmdClose_Click()
