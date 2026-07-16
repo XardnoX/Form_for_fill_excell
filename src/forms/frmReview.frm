@@ -2,64 +2,71 @@
 Begin VB.UserForm frmReview
    Caption         =   "MR_Helper – Kontrola provedených změn"
    BackColor       =   &H00F4F1ED&
-   ClientHeight    =   6000
-   ClientWidth     =   11400
+   ClientHeight    =   6600
+   ClientWidth     =   7200
    StartUpPosition =   1
    Begin VB.CommandButton cmdBack
       Caption         =   "Zpět do formuláře"
       Height          =   420
       Left            =   240
-      Top             =   5340
-      Width           =   1920
+      Top             =   5100
+      Width           =   1440
    End
    Begin VB.CommandButton cmdFinish
       Caption         =   "Dokončit"
       Default         =   -1
       Height          =   420
-      Left            =   9720
-      Top             =   5340
+      Left            =   5520
+      Top             =   5760
       Width           =   1440
    End
    Begin VB.CommandButton cmdUndoAll
       Caption         =   "Vrátit vše"
       Height          =   420
-      Left            =   8280
-      Top             =   5340
-      Width           =   1320
+      Left            =   5460
+      Top             =   5100
+      Width           =   1020
    End
    Begin VB.CommandButton cmdUndo
       Caption         =   "Zrušit změnu"
       Height          =   420
-      Left            =   6600
-      Top             =   5340
-      Width           =   1560
+      Left            =   4140
+      Top             =   5100
+      Width           =   1200
    End
    Begin VB.CommandButton cmdDetail
       Caption         =   "Detail"
       Height          =   420
-      Left            =   5160
-      Top             =   5340
-      Width           =   1320
+      Left            =   3120
+      Top             =   5100
+      Width           =   900
    End
-   Begin VB.CommandButton cmdGoTo
-      Caption         =   "Přejít na buňku"
+   Begin VB.CommandButton cmdPrevious
+      Caption         =   "▲"
       Height          =   420
-      Left            =   3360
-      Top             =   5340
-      Width           =   1680
+      Left            =   1800
+      Top             =   5100
+      Width           =   540
+   End
+   Begin VB.CommandButton cmdNext
+      Caption         =   "▼"
+      Height          =   420
+      Left            =   2460
+      Top             =   5100
+      Width           =   540
    End
    Begin VB.ListBox lstChanges
-      Height          =   3540
+      Height          =   3300
       Left            =   240
       Top             =   1500
-      Width           =   10920
+      Width           =   6240
    End
    Begin VB.Label lblCount
       Caption         =   "Provedené změny: 0"
       Height          =   300
       Left            =   240
       Top             =   1020
-      Width           =   10920
+      Width           =   6240
    End
    Begin VB.Label lblHeader
       BackColor       =   &H00FFFFFF&
@@ -69,7 +76,7 @@ Begin VB.UserForm frmReview
       Left            =   0
       TextAlign       =   2
       Top             =   0
-      Width           =   11400
+      Width           =   7200
    End
    Begin VB.Image imgLogo
       BackStyle       =   0
@@ -82,6 +89,7 @@ Begin VB.UserForm frmReview
 End
 Attribute VB_Name = "frmReview"
 Option Explicit
+Private mUpdatingList As Boolean
 
 Private Sub UserForm_Initialize()
     ApplyVisualStyle
@@ -125,7 +133,10 @@ Private Sub ApplyVisualStyle()
     lblCount.Font.Bold = True
     lstChanges.BackColor = RGB(255, 255, 255)
     StyleReviewButton cmdBack, False
-    StyleReviewButton cmdGoTo, False
+    StyleReviewButton cmdPrevious, False
+    StyleReviewButton cmdNext, False
+    cmdPrevious.ControlTipText = "Předchozí změna"
+    cmdNext.ControlTipText = "Následující změna"
     StyleReviewButton cmdDetail, False
     StyleReviewButton cmdUndo, False
     StyleReviewButton cmdUndoAll, False
@@ -147,11 +158,13 @@ End Sub
 
 Private Sub RefreshList()
     Dim record As CChangeRecord
+    mUpdatingList = True
     lstChanges.Clear
     For Each record In gChanges
         lstChanges.AddItem record.Summary
     Next record
     lblCount.Caption = "Provedené změny: " & CStr(gChanges.Count)
+    mUpdatingList = False
 End Sub
 
 Private Sub cmdBack_Click()
@@ -174,14 +187,76 @@ Private Function SelectedIndex() As Long
     End If
 End Function
 
-Private Sub cmdGoTo_Click()
-    Dim index As Long, record As CChangeRecord
-    index = SelectedIndex
-    If index = 0 Then Exit Sub
+Private Sub lstChanges_Click()
+    If mUpdatingList Then Exit Sub
+    GoToSelectedChange
+End Sub
+
+Private Sub cmdPrevious_Click()
+    Dim newIndex As Long
+    If lstChanges.ListCount = 0 Then Exit Sub
+    If lstChanges.ListIndex <= 0 Then
+        newIndex = lstChanges.ListCount - 1
+    Else
+        newIndex = lstChanges.ListIndex - 1
+    End If
+    mUpdatingList = True
+    lstChanges.ListIndex = newIndex
+    mUpdatingList = False
+    GoToSelectedChange
+End Sub
+
+Private Sub cmdNext_Click()
+    Dim newIndex As Long
+    If lstChanges.ListCount = 0 Then Exit Sub
+    If lstChanges.ListIndex < 0 Or lstChanges.ListIndex >= lstChanges.ListCount - 1 Then
+        newIndex = 0
+    Else
+        newIndex = lstChanges.ListIndex + 1
+    End If
+    mUpdatingList = True
+    lstChanges.ListIndex = newIndex
+    mUpdatingList = False
+    GoToSelectedChange
+End Sub
+
+Private Sub GoToSelectedChange()
+    Dim index As Long, record As CChangeRecord, target As Range
+    index = lstChanges.ListIndex + 1
+    If index < 1 Or index > gChanges.Count Then Exit Sub
     Set record = gChanges(index)
     gTargetWorkbook.Activate
     gTargetWorkbook.Worksheets(record.SheetName).Activate
-    Application.Goto gTargetWorkbook.Worksheets(record.SheetName).Range(record.CellAddress), True
+    Set target = gTargetWorkbook.Worksheets(record.SheetName).Range(record.CellAddress)
+    CenterOnCell target
+End Sub
+
+Private Sub CenterOnCell(ByVal target As Range)
+    Dim visibleRows As Long, visibleColumns As Long
+    Dim newTopRow As Long, newLeftColumn As Long
+    Dim maxTopRow As Long, maxLeftColumn As Long
+    On Error GoTo Fallback
+
+    Application.Goto target, False
+    visibleRows = ActiveWindow.VisibleRange.Rows.Count
+    visibleColumns = ActiveWindow.VisibleRange.Columns.Count
+    newTopRow = target.Row - visibleRows \ 2
+    newLeftColumn = target.Column - visibleColumns \ 2
+    If newTopRow < 1 Then newTopRow = 1
+    If newLeftColumn < 1 Then newLeftColumn = 1
+    maxTopRow = target.Worksheet.Rows.Count - visibleRows + 1
+    maxLeftColumn = target.Worksheet.Columns.Count - visibleColumns + 1
+    If newTopRow > maxTopRow Then newTopRow = maxTopRow
+    If newLeftColumn > maxLeftColumn Then newLeftColumn = maxLeftColumn
+    ActiveWindow.ScrollRow = newTopRow
+    ActiveWindow.ScrollColumn = newLeftColumn
+    target.Select
+    Exit Sub
+
+Fallback:
+    On Error Resume Next
+    Application.Goto target, False
+    On Error GoTo 0
 End Sub
 
 Private Sub cmdDetail_Click()

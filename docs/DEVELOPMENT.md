@@ -27,4 +27,5 @@ Doporučený vývoj probíhá v samostatném `.xlsm` sešitu. Zdrojové soubory 
 - napovídání dříve použitých hodnot bez automatického vložení a zadání nové hodnoty,
 - návrat z kontroly zpět do formuláře a bezpečné vrácení aplikovaných změn,
 - zavření prázdné kontroly křížkem a potvrzení vrácení neuložených změn,
+- automatický centrovaný přechod na vybranou změnu a cyklická navigace tlačítky nahoru/dolů,
 - rolování seznamů a oblasti frází kolečkem myši; při nepodporovaném API zůstávají funkční scrollbary.

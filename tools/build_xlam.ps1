@@ -254,26 +254,27 @@ function Add-ReviewForm {
     $component = $VBProject.VBComponents.Add(3)
     $component.Name = "frmReview"
     $component.Properties.Item("Caption").Value = "MR_Helper – Kontrola provedených změn"
-    $component.Properties.Item("Width").Value = 760
-    $component.Properties.Item("Height").Value = 440
+    $component.Properties.Item("Width").Value = 480
+    $component.Properties.Item("Height").Value = 480
     $designer = $component.Designer
 
-    $reviewHeader = Add-Control $designer "Forms.Label.1" "lblHeader" "MR_HELPER – KONTROLA PROVEDENÝCH ZMĚN" 0 0 752 44
+    $reviewHeader = Add-Control $designer "Forms.Label.1" "lblHeader" "MR_HELPER – KONTROLA PROVEDENÝCH ZMĚN" 0 0 472 44
     $reviewHeader.BackColor = 16777215
     $reviewHeader.ForeColor = 3615007
     $reviewHeader.TextAlign = 2
     $reviewLogo = Add-Control $designer "Forms.Image.1" "imgLogo" $null 8 2 64 36
     $reviewLogo.BackStyle = 0
     $reviewLogo.PictureSizeMode = 3
-    [void](Add-Control $designer "Forms.Label.1" "lblCount" "Provedené změny: 0" 16 55 710 20)
-    [void](Add-Control $designer "Forms.ListBox.1" "lstChanges" $null 16 82 710 236)
-    [void](Add-Control $designer "Forms.CommandButton.1" "cmdBack" "Zpět do formuláře" 16 345 125 28)
-    [void](Add-Control $designer "Forms.CommandButton.1" "cmdGoTo" "Přejít na buňku" 250 345 105 28)
-    [void](Add-Control $designer "Forms.CommandButton.1" "cmdDetail" "Detail" 363 345 75 28)
-    [void](Add-Control $designer "Forms.CommandButton.1" "cmdUndo" "Zrušit změnu" 446 345 90 28)
-    [void](Add-Control $designer "Forms.CommandButton.1" "cmdUndoAll" "Vrátit vše" 544 345 80 28)
+    [void](Add-Control $designer "Forms.Label.1" "lblCount" "Provedené změny: 0" 16 55 416 20)
+    [void](Add-Control $designer "Forms.ListBox.1" "lstChanges" $null 16 82 416 220)
+    [void](Add-Control $designer "Forms.CommandButton.1" "cmdBack" "Zpět do formuláře" 16 320 96 28)
+    [void](Add-Control $designer "Forms.CommandButton.1" "cmdPrevious" "▲" 120 320 36 28)
+    [void](Add-Control $designer "Forms.CommandButton.1" "cmdNext" "▼" 164 320 36 28)
+    [void](Add-Control $designer "Forms.CommandButton.1" "cmdDetail" "Detail" 208 320 60 28)
+    [void](Add-Control $designer "Forms.CommandButton.1" "cmdUndo" "Zrušit změnu" 276 320 80 28)
+    [void](Add-Control $designer "Forms.CommandButton.1" "cmdUndoAll" "Vrátit vše" 364 320 68 28)
 
-    $finish = Add-Control $designer "Forms.CommandButton.1" "cmdFinish" "Dokončit" 632 345 90 28
+    $finish = Add-Control $designer "Forms.CommandButton.1" "cmdFinish" "Dokončit" 368 384 96 28
     $finish.Default = $true
 
     $code = Get-VbaCode -Path (Join-Path $formsRoot "frmReview.frm")
