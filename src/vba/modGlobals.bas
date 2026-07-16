@@ -54,6 +54,8 @@ Public Sub ApplyBrandLogo(ByVal imageControl As Object)
     If Dir$(logoPath) <> vbNullString Then
         Set imageControl.Picture = LoadPicture(logoPath)
         imageControl.PictureSizeMode = 3
+        imageControl.BorderStyle = 0
+        imageControl.SpecialEffect = 0
         imageControl.ZOrder 0
     End If
     On Error GoTo 0

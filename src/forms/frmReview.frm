@@ -4,7 +4,7 @@ Begin VB.UserForm frmReview
    BackColor       =   &H00F4F1ED&
    ClientHeight    =   6600
    ClientWidth     =   7200
-   StartUpPosition =   1
+   StartUpPosition =   0
    Begin VB.CommandButton cmdBack
       Caption         =   "Zpět do formuláře"
       Height          =   420
@@ -23,21 +23,21 @@ Begin VB.UserForm frmReview
    Begin VB.CommandButton cmdUndoAll
       Caption         =   "Vrátit vše"
       Height          =   420
-      Left            =   5460
+      Left            =   4800
       Top             =   5100
       Width           =   1020
    End
    Begin VB.CommandButton cmdUndo
       Caption         =   "Zrušit změnu"
       Height          =   420
-      Left            =   4140
+      Left            =   3480
       Top             =   5100
       Width           =   1200
    End
    Begin VB.CommandButton cmdDetail
       Caption         =   "Detail"
       Height          =   420
-      Left            =   3120
+      Left            =   2460
       Top             =   5100
       Width           =   900
    End
@@ -51,8 +51,8 @@ Begin VB.UserForm frmReview
    Begin VB.CommandButton cmdNext
       Caption         =   "▼"
       Height          =   420
-      Left            =   2460
-      Top             =   5100
+      Left            =   1800
+      Top             =   5580
       Width           =   540
    End
    Begin VB.ListBox lstChanges
@@ -80,9 +80,11 @@ Begin VB.UserForm frmReview
    End
    Begin VB.Image imgLogo
       BackStyle       =   0
+      BorderStyle     =   0
       Height          =   540
       Left            =   120
       PictureSizeMode =   3
+      SpecialEffect   =   0
       Top             =   30
       Width           =   960
    End
@@ -94,7 +96,23 @@ Private mUpdatingList As Boolean
 Private Sub UserForm_Initialize()
     ApplyVisualStyle
     ApplyBrandLogo imgLogo
+    PositionReviewWindow
     RefreshList
+End Sub
+
+Private Sub PositionReviewWindow()
+    Dim screenWidth As Double, screenHeight As Double
+    Dim rightMargin As Double
+    On Error Resume Next
+    screenWidth = Application.UsableWidth
+    screenHeight = Application.UsableHeight
+    If screenWidth <= 0 Or screenHeight <= 0 Then Exit Sub
+    rightMargin = screenWidth * 0.05
+    Me.left = screenWidth - Me.Width - rightMargin
+    Me.top = screenHeight * 0.1
+    If Me.left < 0 Then Me.left = 0
+    If Me.top < 0 Then Me.top = 0
+    On Error GoTo 0
 End Sub
 
 Private Sub UserForm_Activate()

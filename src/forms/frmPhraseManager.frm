@@ -57,9 +57,11 @@ Begin VB.UserForm frmPhraseManager
    End
    Begin VB.Image imgLogo
       BackStyle       =   0
+      BorderStyle     =   0
       Height          =   540
       Left            =   120
       PictureSizeMode =   3
+      SpecialEffect   =   0
       Top             =   30
       Width           =   960
    End

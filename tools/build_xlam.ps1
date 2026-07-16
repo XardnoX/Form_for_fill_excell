@@ -191,7 +191,9 @@ function Add-PrefillForm {
     $header.TextAlign = 2
     $logo = Add-Control $designer "Forms.Image.1" "imgLogo" $null 8 2 64 36
     $logo.BackStyle = 0
+    $logo.BorderStyle = 0
     $logo.PictureSizeMode = 3
+    $logo.SpecialEffect = 0
 
     [void](Add-Control $designer "Forms.Label.1" "lblCount" "" 18 55 565 20)
 
@@ -235,7 +237,9 @@ function Add-PhraseManagerForm {
     $managerHeader.TextAlign = 2
     $managerLogo = Add-Control $designer "Forms.Image.1" "imgLogo" $null 8 2 64 36
     $managerLogo.BackStyle = 0
+    $managerLogo.BorderStyle = 0
     $managerLogo.PictureSizeMode = 3
+    $managerLogo.SpecialEffect = 0
     [void](Add-Control $designer "Forms.ListBox.1" "lstPhrases" $null 16 56 470 200)
     [void](Add-Control $designer "Forms.TextBox.1" "txtPhrase" $null 16 285 270 25)
     [void](Add-Control $designer "Forms.CommandButton.1" "cmdAdd" "Přidat" 295 284 60 27)
@@ -256,6 +260,7 @@ function Add-ReviewForm {
     $component.Properties.Item("Caption").Value = "MR_Helper – Kontrola provedených změn"
     $component.Properties.Item("Width").Value = 480
     $component.Properties.Item("Height").Value = 480
+    $component.Properties.Item("StartUpPosition").Value = 0
     $designer = $component.Designer
 
     $reviewHeader = Add-Control $designer "Forms.Label.1" "lblHeader" "MR_HELPER – KONTROLA PROVEDENÝCH ZMĚN" 0 0 472 44
@@ -264,15 +269,17 @@ function Add-ReviewForm {
     $reviewHeader.TextAlign = 2
     $reviewLogo = Add-Control $designer "Forms.Image.1" "imgLogo" $null 8 2 64 36
     $reviewLogo.BackStyle = 0
+    $reviewLogo.BorderStyle = 0
     $reviewLogo.PictureSizeMode = 3
+    $reviewLogo.SpecialEffect = 0
     [void](Add-Control $designer "Forms.Label.1" "lblCount" "Provedené změny: 0" 16 55 416 20)
     [void](Add-Control $designer "Forms.ListBox.1" "lstChanges" $null 16 82 416 220)
     [void](Add-Control $designer "Forms.CommandButton.1" "cmdBack" "Zpět do formuláře" 16 320 96 28)
     [void](Add-Control $designer "Forms.CommandButton.1" "cmdPrevious" "▲" 120 320 36 28)
-    [void](Add-Control $designer "Forms.CommandButton.1" "cmdNext" "▼" 164 320 36 28)
-    [void](Add-Control $designer "Forms.CommandButton.1" "cmdDetail" "Detail" 208 320 60 28)
-    [void](Add-Control $designer "Forms.CommandButton.1" "cmdUndo" "Zrušit změnu" 276 320 80 28)
-    [void](Add-Control $designer "Forms.CommandButton.1" "cmdUndoAll" "Vrátit vše" 364 320 68 28)
+    [void](Add-Control $designer "Forms.CommandButton.1" "cmdNext" "▼" 120 352 36 28)
+    [void](Add-Control $designer "Forms.CommandButton.1" "cmdDetail" "Detail" 164 320 60 28)
+    [void](Add-Control $designer "Forms.CommandButton.1" "cmdUndo" "Zrušit změnu" 232 320 80 28)
+    [void](Add-Control $designer "Forms.CommandButton.1" "cmdUndoAll" "Vrátit vše" 320 320 68 28)
 
     $finish = Add-Control $designer "Forms.CommandButton.1" "cmdFinish" "Dokončit" 368 384 96 28
     $finish.Default = $true
