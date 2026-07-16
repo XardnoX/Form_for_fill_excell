@@ -8,10 +8,11 @@ Doporučený vývoj probíhá v samostatném `.xlsm` sešitu. Zdrojové soubory 
 2. `modMouseWheel.bas`
 3. `modValueHistory.bas`
 4. `CChangeRecord.cls`
-5. `modPrefillEngine.bas`
-6. `frmPrefill.frm`
-7. `frmPhraseManager.frm`
-8. `frmReview.frm`
+5. `CPhraseLabelHandler.cls`
+6. `modPrefillEngine.bas`
+7. `frmPrefill.frm`
+8. `frmPhraseManager.frm`
+9. `frmReview.frm`
 
 ## Testovací scénáře
 

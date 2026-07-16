@@ -22,6 +22,7 @@ $required = @(
     (Join-Path $vbaRoot "modMouseWheel.bas"),
     (Join-Path $vbaRoot "modValueHistory.bas"),
     (Join-Path $vbaRoot "CChangeRecord.cls"),
+    (Join-Path $vbaRoot "CPhraseLabelHandler.cls"),
     (Join-Path $vbaRoot "modPrefillEngine.bas"),
     (Join-Path $formsRoot "frmPrefill.frm"),
     (Join-Path $formsRoot "frmPhraseManager.frm"),
@@ -308,6 +309,7 @@ try {
     [void](Add-VbaComponent $vbProject 1 "modValueHistory" (Join-Path $vbaRoot "modValueHistory.bas"))
 
     [void](Add-VbaComponent $vbProject 2 "CChangeRecord" (Join-Path $vbaRoot "CChangeRecord.cls"))
+    [void](Add-VbaComponent $vbProject 2 "CPhraseLabelHandler" (Join-Path $vbaRoot "CPhraseLabelHandler.cls"))
 
     [void](Add-VbaComponent $vbProject 1 "modPrefillEngine" (Join-Path $vbaRoot "modPrefillEngine.bas"))
 

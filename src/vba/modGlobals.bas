@@ -239,6 +239,59 @@ Public Function CountPhraseInSelectedSheets( _
 SafeExit:
 End Function
 
+Public Function PhraseOccurrencesBySheet(ByVal phrase As String) As Collection
+    Dim result As New Collection
+    Dim ws As Worksheet
+    Dim rng As Range
+    Dim hit As Range
+    Dim firstAddress As String
+    Dim occurrenceCount As Long
+
+    If gTargetWorkbook Is Nothing Then
+        Set PhraseOccurrencesBySheet = result
+        Exit Function
+    End If
+    If gSelectedSheets Is Nothing Then
+        Set PhraseOccurrencesBySheet = result
+        Exit Function
+    End If
+
+    On Error GoTo SafeExit
+
+    For Each ws In gTargetWorkbook.Worksheets
+        If ws.Visible = xlSheetVisible And gSelectedSheets.Exists(ws.Name) Then
+            occurrenceCount = 0
+            Set rng = ws.UsedRange
+            Set hit = rng.Find( _
+                What:=phrase, _
+                After:=rng.Cells(rng.Cells.Count), _
+                LookIn:=xlValues, _
+                LookAt:=xlWhole, _
+                SearchOrder:=xlByRows, _
+                SearchDirection:=xlNext, _
+                MatchCase:=False, _
+                SearchFormat:=False _
+            )
+
+            If Not hit Is Nothing Then
+                firstAddress = hit.Address(External:=True)
+                Do
+                    occurrenceCount = occurrenceCount + 1
+                    Set hit = rng.FindNext(hit)
+                    If hit Is Nothing Then Exit Do
+                Loop While hit.Address(External:=True) <> firstAddress
+            End If
+
+            If occurrenceCount > 0 Then
+                result.Add ws.Name & " (" & CStr(occurrenceCount) & "×)"
+            End If
+        End If
+    Next ws
+
+SafeExit:
+    Set PhraseOccurrencesBySheet = result
+End Function
+
 Public Function SafeText(ByVal value As Variant) As String
     If IsError(value) Then
         SafeText = "#CHYBA"

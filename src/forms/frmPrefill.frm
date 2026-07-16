@@ -114,6 +114,11 @@ Private mInputs As Collection
 Private mValueHistory As Object
 Private mSheetSelection As Object
 Private mUpdatingSheetControls As Boolean
+Private mPhraseHandlers As Collection
+Private mDraftValues As Object
+Private mExpandedPhrase As String
+Private mOccurrenceCounts As Object
+Private mOccurrenceList As Object
 
 Private Sub UserForm_Initialize()
     Dim ws As Worksheet
@@ -122,6 +127,8 @@ Private Sub UserForm_Initialize()
     Set mAllPhrases = LoadPhrases()
     Set mValueHistory = LoadValueHistory()
     Set mSheetSelection = NewTextDictionary()
+    Set mDraftValues = NewTextDictionary()
+    Set mOccurrenceCounts = NewTextDictionary()
     For Each ws In gTargetWorkbook.Worksheets
         If ws.Visible = xlSheetVisible Then
             mSheetSelection(ws.Name) = True
@@ -146,12 +153,25 @@ End Sub
 Public Function HandleMouseWheel(ByVal screenX As Long, ByVal screenY As Long, _
                                  ByVal delta As Long) As Boolean
     Dim x As Single, y As Single
+    Dim listLeft As Single, listTop As Single
     On Error GoTo Unsupported
     If Not MousePointInForm(Me, screenX, screenY, x, y) Then Exit Function
     If x >= lstSheets.Left And x <= lstSheets.Left + lstSheets.Width And _
        y >= lstSheets.Top And y <= lstSheets.Top + lstSheets.Height Then
         ScrollListByWheel lstSheets, delta
         HandleMouseWheel = True
+    ElseIf Not mOccurrenceList Is Nothing Then
+        listLeft = fraPhrases.Left + mOccurrenceList.Left
+        listTop = fraPhrases.Top + mOccurrenceList.Top - fraPhrases.ScrollTop
+        If x >= listLeft And x <= listLeft + mOccurrenceList.Width And _
+           y >= listTop And y <= listTop + mOccurrenceList.Height Then
+            ScrollListByWheel mOccurrenceList, delta
+            HandleMouseWheel = True
+        ElseIf x >= fraPhrases.Left And x <= fraPhrases.Left + fraPhrases.Width And _
+               y >= fraPhrases.Top And y <= fraPhrases.Top + fraPhrases.Height Then
+            ScrollFrameByWheel fraPhrases, delta
+            HandleMouseWheel = True
+        End If
     ElseIf x >= fraPhrases.Left And x <= fraPhrases.Left + fraPhrases.Width And _
            y >= fraPhrases.Top And y <= fraPhrases.Top + fraPhrases.Height Then
         ScrollFrameByWheel fraPhrases, delta
@@ -267,25 +287,54 @@ Private Sub CaptureSelectedSheets()
     Next ws
 End Sub
 
-Private Sub RefreshContent()
-    Dim i As Long, y As Single, lbl As Object, inputBox As Object, occurrenceCount As Long
-    CaptureSelectedSheets
+Private Sub RefreshContent(Optional ByVal recalculate As Boolean = True)
+    Dim i As Long, y As Single, lbl As Object, inputBox As Object
+    Dim occurrenceList As Object, occurrence As Variant
+    Dim occurrenceCount As Long, expandedHeight As Single
+    Dim phrase As String
+    Dim occurrences As Collection
+    Dim handler As CPhraseLabelHandler
+
+    CaptureDraftValues
+    If recalculate Then
+        CaptureSelectedSheets
+        Set mVisiblePhrases = PhrasesInSelectedSheets(mAllPhrases)
+        Set mOccurrenceCounts = NewTextDictionary()
+    End If
+    Set mPhraseHandlers = Nothing
+    Set mInputs = Nothing
+    Set mOccurrenceList = Nothing
     For i = fraPhrases.Controls.Count - 1 To 0 Step -1
         fraPhrases.Controls.Remove fraPhrases.Controls(i).Name
     Next i
-    Set mVisiblePhrases = PhrasesInSelectedSheets(mAllPhrases)
     Set mInputs = New Collection
+    Set mPhraseHandlers = New Collection
     y = 18
     For i = 1 To mVisiblePhrases.Count
-        occurrenceCount = CountPhraseInSelectedSheets(CStr(mVisiblePhrases(i)))
+        phrase = CStr(mVisiblePhrases(i))
+        If mOccurrenceCounts.Exists(phrase) Then
+            occurrenceCount = CLng(mOccurrenceCounts(phrase))
+        Else
+            occurrenceCount = CountPhraseInSelectedSheets(phrase)
+            mOccurrenceCounts(phrase) = occurrenceCount
+        End If
         Set lbl = fraPhrases.Controls.Add("Forms.Label.1", "lblPhrase" & i, True)
-        lbl.Caption = CStr(mVisiblePhrases(i)) & "  (" & occurrenceCount & "x)"
+        If StrComp(mExpandedPhrase, phrase, vbTextCompare) = 0 Then
+            lbl.Caption = "[-] " & phrase & "  (" & occurrenceCount & "x)"
+        Else
+            lbl.Caption = "[+] " & phrase & "  (" & occurrenceCount & "x)"
+        End If
         lbl.Left = 18
         lbl.Top = y
         lbl.Width = 370
         lbl.Height = 18
         lbl.ForeColor = RGB(55, 65, 81)
         lbl.Font.Bold = True
+        lbl.ControlTipText = "Zobrazit výskyty podle listů"
+
+        Set handler = New CPhraseLabelHandler
+        handler.Initialize lbl, Me, phrase
+        mPhraseHandlers.Add handler
 
         Set inputBox = fraPhrases.Controls.Add("Forms.ComboBox.1", "cboValue" & i, True)
         inputBox.Left = 18
@@ -297,9 +346,29 @@ Private Sub RefreshContent()
         inputBox.MatchEntry = 1
         inputBox.MatchRequired = False
         inputBox.ShowDropButtonWhen = 0
-        FillSuggestions inputBox, mValueHistory, CStr(mVisiblePhrases(i))
+        FillSuggestions inputBox, mValueHistory, phrase
+        If mDraftValues.Exists(phrase) Then inputBox.Value = mDraftValues(phrase)
         mInputs.Add inputBox
-        y = y + 52
+
+        expandedHeight = 0
+        If StrComp(mExpandedPhrase, phrase, vbTextCompare) = 0 Then
+            Set occurrences = PhraseOccurrencesBySheet(phrase)
+            Set occurrenceList = fraPhrases.Controls.Add( _
+                "Forms.ListBox.1", "lstOccurrences" & i, True)
+            Set mOccurrenceList = occurrenceList
+            occurrenceList.Left = 36
+            occurrenceList.Top = y + 48
+            occurrenceList.Width = 352
+            occurrenceList.Height = 8 + 15 * occurrences.Count
+            If occurrenceList.Height > 83 Then occurrenceList.Height = 83
+            occurrenceList.BackColor = RGB(248, 250, 252)
+            For Each occurrence In occurrences
+                occurrenceList.AddItem CStr(occurrence)
+            Next occurrence
+            expandedHeight = occurrenceList.Height + 6
+        End If
+
+        y = y + 52 + expandedHeight
     Next i
     If mVisiblePhrases.Count = 0 Then
         Set lbl = fraPhrases.Controls.Add("Forms.Label.1", "lblEmpty", True)
@@ -312,6 +381,29 @@ Private Sub RefreshContent()
     End If
     fraPhrases.ScrollHeight = y + 18
     lblCount.Caption = CStr(mVisiblePhrases.Count) & " slovních spojení na " & CStr(gSelectedSheets.Count) & " vybraných listech"
+End Sub
+
+Private Sub CaptureDraftValues()
+    Dim i As Long
+
+    If mInputs Is Nothing Then Exit Sub
+    If mVisiblePhrases Is Nothing Then Exit Sub
+    If mDraftValues Is Nothing Then Set mDraftValues = NewTextDictionary()
+
+    For i = 1 To mInputs.Count
+        If i <= mVisiblePhrases.Count Then
+            mDraftValues(CStr(mVisiblePhrases(i))) = CStr(mInputs(i).Value)
+        End If
+    Next i
+End Sub
+
+Public Sub TogglePhraseOccurrences(ByVal phrase As String)
+    If StrComp(mExpandedPhrase, phrase, vbTextCompare) = 0 Then
+        mExpandedPhrase = vbNullString
+    Else
+        mExpandedPhrase = phrase
+    End If
+    RefreshContent False
 End Sub
 
 Private Sub cmdManage_Click()
