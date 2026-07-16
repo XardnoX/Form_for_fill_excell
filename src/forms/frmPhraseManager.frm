@@ -112,18 +112,32 @@ Unsupported:
 End Function
 
 Private Sub ApplyVisualStyle()
-    Me.BackColor = RGB(244, 241, 237)
+    Dim accentBar As Object
+
+    Me.BackColor = RGB(245, 247, 250)
     Me.Font.Name = "Segoe UI"
     Me.Font.Size = 9
     With lblInfo
         .BackColor = RGB(255, 255, 255)
-        .ForeColor = RGB(31, 41, 55)
+        .ForeColor = RGB(15, 53, 77)
         .Font.Name = "Segoe UI Semibold"
         .Font.Size = 11
         .Font.Bold = True
     End With
+
+    Set accentBar = Me.Controls.Add("Forms.Label.1", "lblAccentBar", True)
+    accentBar.Left = 0
+    accentBar.Top = 42
+    accentBar.Width = Me.InsideWidth
+    accentBar.Height = 3
+    accentBar.BackColor = RGB(0, 137, 200)
+
     lstPhrases.BackColor = RGB(255, 255, 255)
+    lstPhrases.BorderStyle = 1
+    lstPhrases.SpecialEffect = 0
     txtPhrase.BackColor = RGB(255, 255, 255)
+    txtPhrase.BorderStyle = 1
+    txtPhrase.SpecialEffect = 0
     StyleManagerButton cmdAdd, True
     StyleManagerButton cmdDelete, False
     StyleManagerButton cmdImport, False
@@ -131,7 +145,7 @@ Private Sub ApplyVisualStyle()
     StyleManagerButton cmdClose, False
     With cmdHelp
         .BackColor = RGB(255, 255, 255)
-        .ForeColor = RGB(14, 116, 180)
+        .ForeColor = RGB(0, 122, 184)
         .Font.Name = "Segoe UI Semibold"
         .Font.Size = 10
         .Font.Bold = True
@@ -141,16 +155,19 @@ Private Sub ApplyVisualStyle()
 End Sub
 
 Private Sub StyleManagerButton(ByVal button As Object, ByVal primary As Boolean)
+    On Error Resume Next
     button.Font.Name = "Segoe UI"
     button.Font.Size = 9
+    button.SpecialEffect = 0
     If primary Then
-        button.BackColor = RGB(54, 69, 79)
+        button.BackColor = RGB(0, 122, 184)
         button.ForeColor = RGB(255, 255, 255)
         button.Font.Bold = True
     Else
-        button.BackColor = RGB(226, 232, 240)
-        button.ForeColor = RGB(31, 41, 55)
+        button.BackColor = RGB(255, 255, 255)
+        button.ForeColor = RGB(15, 76, 110)
     End If
+    On Error GoTo 0
 End Sub
 
 Private Sub ReloadPhrases()

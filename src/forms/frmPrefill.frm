@@ -181,28 +181,43 @@ Unsupported:
 End Function
 
 Private Sub ApplyVisualStyle()
-    Me.BackColor = RGB(244, 241, 237)
+    Dim accentBar As Object
+
+    Me.BackColor = RGB(245, 247, 250)
     Me.Font.Name = "Segoe UI"
     Me.Font.Size = 9
 
     With lblHeader
         .BackColor = RGB(255, 255, 255)
-        .ForeColor = RGB(31, 41, 55)
+        .ForeColor = RGB(15, 53, 77)
         .Font.Name = "Segoe UI Semibold"
         .Font.Size = 13
         .Font.Bold = True
     End With
 
-    lblCount.ForeColor = RGB(75, 85, 99)
+    Set accentBar = Me.Controls.Add("Forms.Label.1", "lblAccentBar", True)
+    accentBar.Left = 0
+    accentBar.Top = 42
+    accentBar.Width = Me.InsideWidth
+    accentBar.Height = 3
+    accentBar.BackColor = RGB(0, 137, 200)
+
+    lblCount.BackColor = RGB(232, 244, 249)
+    lblCount.ForeColor = RGB(15, 76, 110)
     lblCount.Font.Bold = True
     fraPhrases.BackColor = RGB(255, 255, 255)
-    fraPhrases.ForeColor = RGB(54, 69, 79)
+    fraPhrases.ForeColor = RGB(148, 163, 184)
+    fraPhrases.SpecialEffect = 0
     lstSheets.BackColor = RGB(255, 255, 255)
+    lstSheets.BorderStyle = 1
+    lstSheets.SpecialEffect = 0
     txtSheetSearch.BackColor = RGB(255, 255, 255)
+    txtSheetSearch.BorderStyle = 1
+    txtSheetSearch.SpecialEffect = 0
     lblSheetSearch.ForeColor = RGB(75, 85, 99)
     lblSheetSearch.Font.Bold = True
     lblAllSheets.ForeColor = RGB(55, 65, 81)
-    lblPhrasesHeader.ForeColor = RGB(54, 69, 79)
+    lblPhrasesHeader.ForeColor = RGB(15, 76, 110)
     lblPhrasesHeader.Font.Bold = True
 
     StyleButton cmdManage, False
@@ -264,16 +279,19 @@ Private Sub chkAllSheets_Click()
 End Sub
 
 Private Sub StyleButton(ByVal button As Object, ByVal primary As Boolean)
+    On Error Resume Next
     button.Font.Name = "Segoe UI"
     button.Font.Size = 9
+    button.SpecialEffect = 0
     If primary Then
-        button.BackColor = RGB(54, 69, 79)
+        button.BackColor = RGB(0, 122, 184)
         button.ForeColor = RGB(255, 255, 255)
         button.Font.Bold = True
     Else
-        button.BackColor = RGB(226, 232, 240)
-        button.ForeColor = RGB(31, 41, 55)
+        button.BackColor = RGB(255, 255, 255)
+        button.ForeColor = RGB(15, 76, 110)
     End If
+    On Error GoTo 0
 End Sub
 
 Private Sub CaptureSelectedSheets()
@@ -328,7 +346,7 @@ Private Sub RefreshContent(Optional ByVal recalculate As Boolean = True)
         lbl.Top = y
         lbl.Width = 370
         lbl.Height = 18
-        lbl.ForeColor = RGB(55, 65, 81)
+        lbl.ForeColor = RGB(15, 76, 110)
         lbl.Font.Bold = True
         lbl.ControlTipText = "Zobrazit výskyty podle listů"
 
@@ -342,6 +360,8 @@ Private Sub RefreshContent(Optional ByVal recalculate As Boolean = True)
         inputBox.Width = 370
         inputBox.Height = 24
         inputBox.BackColor = RGB(255, 255, 255)
+        inputBox.BorderStyle = 1
+        inputBox.SpecialEffect = 0
         inputBox.Style = 0
         inputBox.MatchEntry = 1
         inputBox.MatchRequired = False
@@ -362,6 +382,8 @@ Private Sub RefreshContent(Optional ByVal recalculate As Boolean = True)
             occurrenceList.Height = 8 + 15 * occurrences.Count
             If occurrenceList.Height > 83 Then occurrenceList.Height = 83
             occurrenceList.BackColor = RGB(248, 250, 252)
+            occurrenceList.BorderStyle = 1
+            occurrenceList.SpecialEffect = 0
             For Each occurrence In occurrences
                 occurrenceList.AddItem CStr(occurrence)
             Next occurrence

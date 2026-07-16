@@ -137,19 +137,32 @@ Unsupported:
 End Function
 
 Private Sub ApplyVisualStyle()
-    Me.BackColor = RGB(244, 241, 237)
+    Dim accentBar As Object
+
+    Me.BackColor = RGB(245, 247, 250)
     Me.Font.Name = "Segoe UI"
     Me.Font.Size = 9
     With lblHeader
         .BackColor = RGB(255, 255, 255)
-        .ForeColor = RGB(31, 41, 55)
+        .ForeColor = RGB(15, 53, 77)
         .Font.Name = "Segoe UI Semibold"
         .Font.Size = 13
         .Font.Bold = True
     End With
-    lblCount.ForeColor = RGB(75, 85, 99)
+
+    Set accentBar = Me.Controls.Add("Forms.Label.1", "lblAccentBar", True)
+    accentBar.Left = 0
+    accentBar.Top = 42
+    accentBar.Width = Me.InsideWidth
+    accentBar.Height = 3
+    accentBar.BackColor = RGB(0, 137, 200)
+
+    lblCount.BackColor = RGB(232, 244, 249)
+    lblCount.ForeColor = RGB(15, 76, 110)
     lblCount.Font.Bold = True
     lstChanges.BackColor = RGB(255, 255, 255)
+    lstChanges.BorderStyle = 1
+    lstChanges.SpecialEffect = 0
     StyleReviewButton cmdBack, False
     StyleReviewButton cmdPrevious, False
     StyleReviewButton cmdNext, False
@@ -162,16 +175,19 @@ Private Sub ApplyVisualStyle()
 End Sub
 
 Private Sub StyleReviewButton(ByVal button As Object, ByVal primary As Boolean)
+    On Error Resume Next
     button.Font.Name = "Segoe UI"
     button.Font.Size = 9
+    button.SpecialEffect = 0
     If primary Then
-        button.BackColor = RGB(54, 69, 79)
+        button.BackColor = RGB(0, 122, 184)
         button.ForeColor = RGB(255, 255, 255)
         button.Font.Bold = True
     Else
-        button.BackColor = RGB(226, 232, 240)
-        button.ForeColor = RGB(31, 41, 55)
+        button.BackColor = RGB(255, 255, 255)
+        button.ForeColor = RGB(15, 76, 110)
     End If
+    On Error GoTo 0
 End Sub
 
 Private Sub RefreshList()
