@@ -181,8 +181,9 @@ Unsupported:
 End Function
 
 Private Sub ApplyVisualStyle()
-    Dim accentBar As Object
+    Dim accentBar As Object, sheetsCard As Object, footerLine As Object
 
+    On Error Resume Next
     Me.BackColor = RGB(245, 247, 250)
     Me.Font.Name = "Segoe UI"
     Me.Font.Size = 9
@@ -202,6 +203,18 @@ Private Sub ApplyVisualStyle()
     accentBar.Height = 3
     accentBar.BackColor = RGB(0, 137, 200)
 
+    Set sheetsCard = AddSurface("pnlSheets", 10, 74, 148, 326)
+    Set footerLine = Me.Controls.Add("Forms.Label.1", "lblFooterLine", True)
+    footerLine.Left = 10
+    footerLine.Top = 400
+    footerLine.Width = Me.InsideWidth - 20
+    footerLine.Height = 1
+    footerLine.BackColor = RGB(218, 226, 234)
+
+    lblCount.Left = 10
+    lblCount.Top = 52
+    lblCount.Width = Me.InsideWidth - 20
+    lblCount.Height = 22
     lblCount.BackColor = RGB(232, 244, 249)
     lblCount.ForeColor = RGB(15, 76, 110)
     lblCount.Font.Bold = True
@@ -210,9 +223,11 @@ Private Sub ApplyVisualStyle()
     fraPhrases.SpecialEffect = 0
     lstSheets.BackColor = RGB(255, 255, 255)
     lstSheets.BorderStyle = 1
+    lstSheets.BorderColor = RGB(203, 213, 225)
     lstSheets.SpecialEffect = 0
     txtSheetSearch.BackColor = RGB(255, 255, 255)
     txtSheetSearch.BorderStyle = 1
+    txtSheetSearch.BorderColor = RGB(148, 163, 184)
     txtSheetSearch.SpecialEffect = 0
     lblSheetSearch.ForeColor = RGB(75, 85, 99)
     lblSheetSearch.Font.Bold = True
@@ -223,7 +238,26 @@ Private Sub ApplyVisualStyle()
     StyleButton cmdManage, False
     StyleButton cmdCancel, False
     StyleButton cmdSave, True
+    On Error GoTo 0
 End Sub
+
+Private Function AddSurface(ByVal controlName As String, ByVal controlLeft As Single, _
+                            ByVal controlTop As Single, ByVal controlWidth As Single, _
+                            ByVal controlHeight As Single) As Object
+    Dim surface As Object
+
+    Set surface = Me.Controls.Add("Forms.Label.1", controlName, True)
+    surface.Caption = vbNullString
+    surface.Left = controlLeft
+    surface.Top = controlTop
+    surface.Width = controlWidth
+    surface.Height = controlHeight
+    surface.BackColor = RGB(255, 255, 255)
+    surface.BorderStyle = 1
+    surface.BorderColor = RGB(226, 232, 240)
+    surface.ZOrder 1
+    Set AddSurface = surface
+End Function
 
 Private Sub PopulateSheetList()
     Dim ws As Worksheet, query As String, index As Long
@@ -307,7 +341,7 @@ End Sub
 
 Private Sub RefreshContent(Optional ByVal recalculate As Boolean = True)
     Dim i As Long, y As Single, lbl As Object, inputBox As Object
-    Dim occurrenceList As Object, occurrence As Variant
+    Dim occurrenceList As Object, occurrence As Variant, separator As Object
     Dim occurrenceCount As Long, expandedHeight As Single
     Dim phrase As String
     Dim occurrences As Collection
@@ -361,6 +395,7 @@ Private Sub RefreshContent(Optional ByVal recalculate As Boolean = True)
         inputBox.Height = 24
         inputBox.BackColor = RGB(255, 255, 255)
         inputBox.BorderStyle = 1
+        inputBox.BorderColor = RGB(148, 163, 184)
         inputBox.SpecialEffect = 0
         inputBox.Style = 0
         inputBox.MatchEntry = 1
@@ -383,12 +418,21 @@ Private Sub RefreshContent(Optional ByVal recalculate As Boolean = True)
             If occurrenceList.Height > 83 Then occurrenceList.Height = 83
             occurrenceList.BackColor = RGB(248, 250, 252)
             occurrenceList.BorderStyle = 1
+            occurrenceList.BorderColor = RGB(203, 213, 225)
             occurrenceList.SpecialEffect = 0
             For Each occurrence In occurrences
                 occurrenceList.AddItem CStr(occurrence)
             Next occurrence
             expandedHeight = occurrenceList.Height + 6
         End If
+
+        Set separator = fraPhrases.Controls.Add( _
+            "Forms.Label.1", "sepPhrase" & i, True)
+        separator.Left = 18
+        separator.Top = y + 48 + expandedHeight
+        separator.Width = 370
+        separator.Height = 1
+        separator.BackColor = RGB(226, 232, 240)
 
         y = y + 52 + expandedHeight
     Next i

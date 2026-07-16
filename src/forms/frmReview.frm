@@ -137,8 +137,9 @@ Unsupported:
 End Function
 
 Private Sub ApplyVisualStyle()
-    Dim accentBar As Object
+    Dim accentBar As Object, changesCard As Object, footerLine As Object
 
+    On Error Resume Next
     Me.BackColor = RGB(245, 247, 250)
     Me.Font.Name = "Segoe UI"
     Me.Font.Size = 9
@@ -157,11 +158,24 @@ Private Sub ApplyVisualStyle()
     accentBar.Height = 3
     accentBar.BackColor = RGB(0, 137, 200)
 
+    Set changesCard = AddSurface("pnlChanges", 10, 50, 438, 260)
+    Set footerLine = Me.Controls.Add("Forms.Label.1", "lblFooterLine", True)
+    footerLine.Left = 10
+    footerLine.Top = 312
+    footerLine.Width = Me.InsideWidth - 20
+    footerLine.Height = 1
+    footerLine.BackColor = RGB(218, 226, 234)
+
+    lblCount.Left = 16
+    lblCount.Top = 54
+    lblCount.Width = 416
+    lblCount.Height = 22
     lblCount.BackColor = RGB(232, 244, 249)
     lblCount.ForeColor = RGB(15, 76, 110)
     lblCount.Font.Bold = True
     lstChanges.BackColor = RGB(255, 255, 255)
     lstChanges.BorderStyle = 1
+    lstChanges.BorderColor = RGB(203, 213, 225)
     lstChanges.SpecialEffect = 0
     StyleReviewButton cmdBack, False
     StyleReviewButton cmdPrevious, False
@@ -172,7 +186,26 @@ Private Sub ApplyVisualStyle()
     StyleReviewButton cmdUndo, False
     StyleReviewButton cmdUndoAll, False
     StyleReviewButton cmdFinish, True
+    On Error GoTo 0
 End Sub
+
+Private Function AddSurface(ByVal controlName As String, ByVal controlLeft As Single, _
+                            ByVal controlTop As Single, ByVal controlWidth As Single, _
+                            ByVal controlHeight As Single) As Object
+    Dim surface As Object
+
+    Set surface = Me.Controls.Add("Forms.Label.1", controlName, True)
+    surface.Caption = vbNullString
+    surface.Left = controlLeft
+    surface.Top = controlTop
+    surface.Width = controlWidth
+    surface.Height = controlHeight
+    surface.BackColor = RGB(255, 255, 255)
+    surface.BorderStyle = 1
+    surface.BorderColor = RGB(226, 232, 240)
+    surface.ZOrder 1
+    Set AddSurface = surface
+End Function
 
 Private Sub StyleReviewButton(ByVal button As Object, ByVal primary As Boolean)
     On Error Resume Next
