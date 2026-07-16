@@ -3,7 +3,7 @@ Option Explicit
 
 Public Sub ApplyPrefillChanges()
     Dim ws As Worksheet, phrase As Variant, enteredValue As Variant, rng As Range
-    Dim hit As Range, target As Range, firstAddress As String
+    Dim hit As Range, target As Range, hits As Collection
     Dim record As CChangeRecord, touched As Object, key As String
     Dim oldCalc As XlCalculation, oldEvents As Boolean, oldScreen As Boolean
 
@@ -24,15 +24,14 @@ Public Sub ApplyPrefillChanges()
             For Each phrase In gValues.Keys
                 enteredValue = gValues(phrase)
                 If Len(CStr(enteredValue)) > 0 Then
-                    Set hit = rng.Find(What:=CStr(phrase), After:=rng.Cells(rng.Cells.Count), _
-                        LookIn:=xlValues, LookAt:=xlWhole, SearchOrder:=xlByRows, _
-                        SearchDirection:=xlNext, MatchCase:=False, SearchFormat:=False)
-                    If Not hit Is Nothing Then
-                        firstAddress = hit.Address(External:=True)
-                        Do
+                    ' Zápis do listu během FindNext může změnit interní stav
+                    ' hledání Excelu a způsobit přeskočení dalších výskytů.
+                    ' Proto nejdříve sesbíráme všechny nálezy a až potom zapisujeme.
+                    Set hits = FindPhraseHits(rng, CStr(phrase))
+                    For Each hit In hits
                             Set target = RightCellFor(hit)
                             If Not target Is Nothing Then
-                                key = ws.CodeName & "!" & target.Address(False, False)
+                                key = ws.Name & "!" & target.Address(False, False)
                                 If Not touched.Exists(key) Then
                                     touched.Add key, CStr(phrase)
                                     Set record = New CChangeRecord
@@ -45,10 +44,7 @@ Public Sub ApplyPrefillChanges()
                                     gChanges.Add record
                                 End If
                             End If
-                            Set hit = rng.FindNext(hit)
-                            If hit Is Nothing Then Exit Do
-                        Loop While hit.Address(External:=True) <> firstAddress
-                    End If
+                    Next hit
                 End If
             Next phrase
         End If
@@ -68,6 +64,30 @@ Fatal:
     MsgBox "Operaci se nepodařilo dokončit: " & Err.Description, vbCritical, TOOL_TITLE
     Resume CleanExit
 End Sub
+
+Private Function FindPhraseHits(ByVal searchRange As Range, ByVal phrase As String) As Collection
+    Dim result As New Collection
+    Dim hit As Range
+    Dim firstAddress As String
+
+    Set hit = searchRange.Find(What:=phrase, _
+        After:=searchRange.Cells(searchRange.Cells.Count), _
+        LookIn:=xlValues, LookAt:=xlWhole, SearchOrder:=xlByRows, _
+        SearchDirection:=xlNext, MatchCase:=False, SearchFormat:=False)
+
+    If Not hit Is Nothing Then
+        firstAddress = hit.Address
+        Do
+            result.Add hit
+            Set hit = searchRange.Find(What:=phrase, After:=hit, _
+                LookIn:=xlValues, LookAt:=xlWhole, SearchOrder:=xlByRows, _
+                SearchDirection:=xlNext, MatchCase:=False, SearchFormat:=False)
+            If hit Is Nothing Then Exit Do
+        Loop While hit.Address <> firstAddress
+    End If
+
+    Set FindPhraseHits = result
+End Function
 
 Private Sub CaptureOriginalState(ByVal record As CChangeRecord, ByVal target As Range, ByVal phrase As String)
     record.SheetName = target.Worksheet.Name
