@@ -28,7 +28,6 @@ try {
         throw "Excel je spuštěný. Zavřete všechny instance Excelu a spusťte skript znovu."
     }
 
-    # Přístup je povolen pouze během sestavení a v finally se obnoví původní stav.
     Set-ItemProperty -Path $securityKey -Name AccessVBOM -Type DWord -Value 1
 
     Write-Host "[1/3] Sestavuji MR_Helper.xlam..."

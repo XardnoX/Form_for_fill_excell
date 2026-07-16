@@ -24,26 +24,23 @@ Public Sub ApplyPrefillChanges()
             For Each phrase In gValues.Keys
                 enteredValue = gValues(phrase)
                 If Len(CStr(enteredValue)) > 0 Then
-                    ' Zápis do listu během FindNext může změnit interní stav
-                    ' hledání Excelu a způsobit přeskočení dalších výskytů.
-                    ' Proto nejdříve sesbíráme všechny nálezy a až potom zapisujeme.
                     Set hits = FindPhraseHits(rng, CStr(phrase))
                     For Each hit In hits
-                            Set target = RightCellFor(hit)
-                            If Not target Is Nothing Then
-                                key = ws.Name & "!" & target.Address(False, False)
-                                If Not touched.Exists(key) Then
-                                    touched.Add key, CStr(phrase)
-                                    Set record = New CChangeRecord
-                                    CaptureOriginalState record, target, CStr(phrase)
-                                    record.NewValue = CoerceValue(enteredValue, target)
-                                    target.Value2 = record.NewValue
-                                    target.NumberFormat = record.OldNumberFormat
-                                    target.Interior.Pattern = xlSolid
-                                    target.Interior.Color = RGB(255, 235, 59)
-                                    gChanges.Add record
-                                End If
+                        Set target = RightCellFor(hit)
+                        If Not target Is Nothing Then
+                            key = ws.Name & "!" & target.Address(False, False)
+                            If Not touched.Exists(key) Then
+                                touched.Add key, CStr(phrase)
+                                Set record = New CChangeRecord
+                                CaptureOriginalState record, target, CStr(phrase)
+                                record.NewValue = CoerceValue(enteredValue, target)
+                                target.Value2 = record.NewValue
+                                target.NumberFormat = record.OldNumberFormat
+                                target.Interior.Pattern = xlSolid
+                                target.Interior.Color = RGB(255, 235, 59)
+                                gChanges.Add record
                             End If
+                        End If
                     Next hit
                 End If
             Next phrase

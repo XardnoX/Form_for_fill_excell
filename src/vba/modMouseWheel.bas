@@ -1,9 +1,6 @@
 Attribute VB_Name = "modMouseWheel"
 Option Explicit
 
-' Volitelná podpora kolečka myši pro MSForms. Všechny veřejné vstupy
-' jsou fail-silent, aby nepodporované prostředí neovlivnilo formuláře.
-
 #If VBA7 Then
     Private Declare PtrSafe Function SetWindowsHookEx Lib "user32" Alias "SetWindowsHookExA" ( _
         ByVal idHook As Long, ByVal lpfn As LongPtr, ByVal hmod As LongPtr, _

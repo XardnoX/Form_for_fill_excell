@@ -108,10 +108,10 @@ Private Sub PositionReviewWindow()
     screenHeight = Application.UsableHeight
     If screenWidth <= 0 Or screenHeight <= 0 Then Exit Sub
     rightMargin = screenWidth * 0.05
-    Me.left = screenWidth - Me.Width - rightMargin
-    Me.top = screenHeight * 0.1
-    If Me.left < 0 Then Me.left = 0
-    If Me.top < 0 Then Me.top = 0
+    Me.Left = screenWidth - Me.Width - rightMargin
+    Me.Top = screenHeight * 0.1
+    If Me.Left < 0 Then Me.Left = 0
+    If Me.Top < 0 Then Me.Top = 0
     On Error GoTo 0
 End Sub
 
@@ -128,8 +128,8 @@ Public Function HandleMouseWheel(ByVal screenX As Long, ByVal screenY As Long, _
     Dim x As Single, y As Single
     On Error GoTo Unsupported
     If Not MousePointInForm(Me, screenX, screenY, x, y) Then Exit Function
-    If x >= lstChanges.left And x <= lstChanges.left + lstChanges.Width And _
-       y >= lstChanges.top And y <= lstChanges.top + lstChanges.Height Then
+    If x >= lstChanges.Left And x <= lstChanges.Left + lstChanges.Width And _
+       y >= lstChanges.Top And y <= lstChanges.Top + lstChanges.Height Then
         ScrollListByWheel lstChanges, delta
         HandleMouseWheel = True
     End If
@@ -292,7 +292,10 @@ End Sub
 Private Sub cmdUndo_Click()
     Dim index As Long
     index = SelectedIndex
-    If index > 0 Then UndoChange index: RefreshList
+    If index > 0 Then
+        UndoChange index
+        RefreshList
+    End If
 End Sub
 
 Private Sub cmdUndoAll_Click()

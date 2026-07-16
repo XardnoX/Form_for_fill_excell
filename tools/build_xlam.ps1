@@ -60,12 +60,10 @@ function Read-Utf8TextFile {
         throw "Soubor není platné UTF-8: $resolvedPath. $($_.Exception.Message)"
     }
 
-    # Odstranění správně dekódovaného UTF-8 BOM.
     if ($text.Length -gt 0 -and [int][char]$text[0] -eq 0xFEFF) {
         $text = $text.Substring(1)
     }
 
-    # Ochrana proti BOM, který byl už dříve chybně převeden na viditelný text.
     $text = $text -replace '^(ï»¿|ď»ż)', ''
 
     if ($text.IndexOf([char]0xFFFD) -ge 0) {
@@ -85,9 +83,6 @@ function Get-VbaCode {
 
     $text = Read-Utf8TextFile -Path $Path
 
-    # Exportované .bas, .cls a .frm mohou obsahovat hlavičky VERSION, BEGIN/END
-    # a Attribute VB_*. Při programovém vytvoření komponenty přes Add(...) se
-    # do CodeModule.AddFromString vkládá pouze vlastní kód od Option Explicit.
     $match = [regex]::Match(
         $text,
         '(?im)^\s*Option\s+Explicit\s*$'
@@ -99,7 +94,6 @@ function Get-VbaCode {
 
     $code = $text.Substring($match.Index)
 
-    # Normalizace konců řádků pro VBE.
     $code = $code.Replace("`r`n", "`n")
     $code = $code.Replace("`r", "`n")
     $code = $code.Replace("`n", "`r`n")
@@ -177,7 +171,6 @@ function Add-Control {
 function Add-PrefillForm {
     param($VBProject)
 
-    # 3 = vbext_ct_MSForm. Formulář se nevytváří importem .frm.
     $component = $VBProject.VBComponents.Add(3)
     $component.Name = "frmPrefill"
     $component.Properties.Item("Caption").Value = "MR_Helper"
@@ -223,7 +216,6 @@ function Add-PrefillForm {
 function Add-PhraseManagerForm {
     param($VBProject)
 
-    # 3 = vbext_ct_MSForm. Formulář se nevytváří importem .frm.
     $component = $VBProject.VBComponents.Add(3)
     $component.Name = "frmPhraseManager"
     $component.Properties.Item("Caption").Value = "MR_Helper – Správa slovních spojení"
@@ -256,7 +248,6 @@ function Add-PhraseManagerForm {
 function Add-ReviewForm {
     param($VBProject)
 
-    # 3 = vbext_ct_MSForm. Formulář se nevytváří importem .frm.
     $component = $VBProject.VBComponents.Add(3)
     $component.Name = "frmReview"
     $component.Properties.Item("Caption").Value = "MR_Helper – Kontrola provedených změn"
@@ -312,12 +303,10 @@ try {
 
     $vbProject.Name = "MR_Helper"
 
-    # Standardní moduly: 1 = vbext_ct_StdModule.
     [void](Add-VbaComponent $vbProject 1 "modGlobals" (Join-Path $vbaRoot "modGlobals.bas"))
     [void](Add-VbaComponent $vbProject 1 "modMouseWheel" (Join-Path $vbaRoot "modMouseWheel.bas"))
     [void](Add-VbaComponent $vbProject 1 "modValueHistory" (Join-Path $vbaRoot "modValueHistory.bas"))
 
-    # Třída: 2 = vbext_ct_ClassModule.
     [void](Add-VbaComponent $vbProject 2 "CChangeRecord" (Join-Path $vbaRoot "CChangeRecord.cls"))
 
     [void](Add-VbaComponent $vbProject 1 "modPrefillEngine" (Join-Path $vbaRoot "modPrefillEngine.bas"))
@@ -332,7 +321,6 @@ try {
         Remove-Item -LiteralPath $Output -Force
     }
 
-    # 55 = xlOpenXMLAddIn (.xlam)
     $workbook.SaveAs($Output, 55)
     $workbook.Close($true)
     $workbook = $null
@@ -360,7 +348,6 @@ try {
     $customUiDirectory = Join-Path $tempDirectory "customUI"
     New-Item -ItemType Directory -Force $customUiDirectory | Out-Null
 
-    # Ribbon XML se kopíruje bajtově. Nedochází k textovému překódování.
     Copy-Item -LiteralPath $ribbonFile -Destination (Join-Path $customUiDirectory "customUI14.xml") -Force
 
     $customUiImagesDirectory = Join-Path $customUiDirectory "images"

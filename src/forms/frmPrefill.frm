@@ -148,12 +148,12 @@ Public Function HandleMouseWheel(ByVal screenX As Long, ByVal screenY As Long, _
     Dim x As Single, y As Single
     On Error GoTo Unsupported
     If Not MousePointInForm(Me, screenX, screenY, x, y) Then Exit Function
-    If x >= lstSheets.left And x <= lstSheets.left + lstSheets.Width And _
-       y >= lstSheets.top And y <= lstSheets.top + lstSheets.Height Then
+    If x >= lstSheets.Left And x <= lstSheets.Left + lstSheets.Width And _
+       y >= lstSheets.Top And y <= lstSheets.Top + lstSheets.Height Then
         ScrollListByWheel lstSheets, delta
         HandleMouseWheel = True
-    ElseIf x >= fraPhrases.left And x <= fraPhrases.left + fraPhrases.Width And _
-           y >= fraPhrases.top And y <= fraPhrases.top + fraPhrases.Height Then
+    ElseIf x >= fraPhrases.Left And x <= fraPhrases.Left + fraPhrases.Width And _
+           y >= fraPhrases.Top And y <= fraPhrases.Top + fraPhrases.Height Then
         ScrollFrameByWheel fraPhrases, delta
         HandleMouseWheel = True
     End If
@@ -280,12 +280,18 @@ Private Sub RefreshContent()
         occurrenceCount = CountPhraseInSelectedSheets(CStr(mVisiblePhrases(i)))
         Set lbl = fraPhrases.Controls.Add("Forms.Label.1", "lblPhrase" & i, True)
         lbl.Caption = CStr(mVisiblePhrases(i)) & "  (" & occurrenceCount & "x)"
-        lbl.Left = 18: lbl.Top = y: lbl.Width = 370: lbl.Height = 18
+        lbl.Left = 18
+        lbl.Top = y
+        lbl.Width = 370
+        lbl.Height = 18
         lbl.ForeColor = RGB(55, 65, 81)
         lbl.Font.Bold = True
 
         Set inputBox = fraPhrases.Controls.Add("Forms.ComboBox.1", "cboValue" & i, True)
-        inputBox.Left = 18: inputBox.Top = y + 20: inputBox.Width = 370: inputBox.Height = 24
+        inputBox.Left = 18
+        inputBox.Top = y + 20
+        inputBox.Width = 370
+        inputBox.Height = 24
         inputBox.BackColor = RGB(255, 255, 255)
         inputBox.Style = 0
         inputBox.MatchEntry = 1
@@ -298,7 +304,10 @@ Private Sub RefreshContent()
     If mVisiblePhrases.Count = 0 Then
         Set lbl = fraPhrases.Controls.Add("Forms.Label.1", "lblEmpty", True)
         lbl.Caption = "Na vybraných listech nebylo nalezeno žádné uložené slovní spojení."
-        lbl.Left = 18: lbl.Top = 28: lbl.Width = 370: lbl.Height = 36
+        lbl.Left = 18
+        lbl.Top = 28
+        lbl.Width = 370
+        lbl.Height = 36
         lbl.ForeColor = RGB(107, 114, 128)
     End If
     fraPhrases.ScrollHeight = y + 18

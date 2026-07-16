@@ -103,20 +103,18 @@ Public Function LoadPhrases() As Collection
         Next i
     End If
 
-    ' Povinné, pevně definované fráze.
-    ' AddUnique zajistí, že v seznamu nevzniknou duplicity.
-        AddUnique result, "Vypracoval:"
-        AddUnique result, "Ověřil a schválil:"
-        AddUnique result, "Rozdělovník:"
-        AddUnique result, "První vydání:"
-        AddUnique result, "Číslo/datum revize:"
-        AddUnique result, "Zákazník:"
-        AddUnique result, "Číslo odlitku:"
-        AddUnique result, "Název odlitku:"
-        AddUnique result, "Operace:"
-        AddUnique result, "Stroj:"
-        AddUnique result, "Schválil:"
-        AddUnique result, "Ověřil:"
+    AddUnique result, "Vypracoval:"
+    AddUnique result, "Ověřil a schválil:"
+    AddUnique result, "Rozdělovník:"
+    AddUnique result, "První vydání:"
+    AddUnique result, "Číslo/datum revize:"
+    AddUnique result, "Zákazník:"
+    AddUnique result, "Číslo odlitku:"
+    AddUnique result, "Název odlitku:"
+    AddUnique result, "Operace:"
+    AddUnique result, "Stroj:"
+    AddUnique result, "Schválil:"
+    AddUnique result, "Ověřil:"
 
     SavePhrases result
 

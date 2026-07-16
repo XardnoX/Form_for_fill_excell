@@ -103,8 +103,8 @@ Public Function HandleMouseWheel(ByVal screenX As Long, ByVal screenY As Long, _
     Dim x As Single, y As Single
     On Error GoTo Unsupported
     If Not MousePointInForm(Me, screenX, screenY, x, y) Then Exit Function
-    If x >= lstPhrases.left And x <= lstPhrases.left + lstPhrases.Width And _
-       y >= lstPhrases.top And y <= lstPhrases.top + lstPhrases.Height Then
+    If x >= lstPhrases.Left And x <= lstPhrases.Left + lstPhrases.Width And _
+       y >= lstPhrases.Top And y <= lstPhrases.Top + lstPhrases.Height Then
         ScrollListByWheel lstPhrases, delta
         HandleMouseWheel = True
     End If

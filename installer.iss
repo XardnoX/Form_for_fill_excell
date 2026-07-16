@@ -37,7 +37,6 @@ Source: "Build\MR_Helper_assets\{#MyLogoFile}"; DestDir: "{userappdata}\Microsof
 Name: "{userprograms}\MR_Helper\Odinstalovat"; Filename: "{uninstallexe}"
 
 [InstallDelete]
-; Odstranění souborů starších vývojových verzí.
 Type: files; Name: "{userappdata}\Microsoft\Excel\XLSTART\VyplnitNazvoslovi.xlam"
 Type: files; Name: "{userappdata}\Microsoft\Excel\XLSTART\FormularProPredvyplneni.xlam"
 Type: files; Name: "{userappdata}\Microsoft\Excel\XLSTART\MR_Helper_logo.jpg"
