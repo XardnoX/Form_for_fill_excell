@@ -22,4 +22,5 @@ Doporučený vývoj probíhá v samostatném `.xlsm` sešitu. Zdrojové soubory 
 - původní vzorec v cílové buňce,
 - číslo, datum, text a logická hodnota,
 - vrácení jedné změny a vrácení všech změn,
-- našeptávání existující hodnoty a zadání nové hodnoty.
+- napovídání dříve použitých hodnot bez automatického vložení a zadání nové hodnoty,
+- návrat z kontroly zpět do formuláře a bezpečné vrácení aplikovaných změn.

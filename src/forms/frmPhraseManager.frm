@@ -1,6 +1,7 @@
 ﻿VERSION 5.00
 Begin VB.UserForm frmPhraseManager
    Caption         =   "Správa slovních spojení"
+   BackColor       =   &H00F4F1ED&
    ClientHeight    =   5400
    ClientWidth     =   7800
    StartUpPosition =   1
@@ -39,17 +40,20 @@ Begin VB.UserForm frmPhraseManager
       Width           =   3240
    End
    Begin VB.ListBox lstPhrases
-      Height          =   3240
+      Height          =   3000
       Left            =   240
-      Top             =   600
+      Top             =   840
       Width           =   7320
    End
    Begin VB.Label lblInfo
+      BackColor       =   &H004F4536&
       Caption         =   "Uložená slovní spojení"
-      Height          =   300
-      Left            =   240
-      Top             =   180
-      Width           =   3000
+      ForeColor       =   &H00FFFFFF&
+      Height          =   600
+      Left            =   0
+      TextAlign       =   2
+      Top             =   0
+      Width           =   7800
    End
 End
 Attribute VB_Name = "frmPhraseManager"
@@ -57,7 +61,40 @@ Option Explicit
 Private mPhrases As Collection
 
 Private Sub UserForm_Initialize()
+    ApplyVisualStyle
     ReloadPhrases
+End Sub
+
+Private Sub ApplyVisualStyle()
+    Me.BackColor = RGB(244, 241, 237)
+    Me.Font.Name = "Segoe UI"
+    Me.Font.Size = 9
+    With lblInfo
+        .BackColor = RGB(54, 69, 79)
+        .ForeColor = RGB(255, 255, 255)
+        .Font.Name = "Segoe UI Semibold"
+        .Font.Size = 11
+        .Font.Bold = True
+    End With
+    lstPhrases.BackColor = RGB(255, 255, 255)
+    txtPhrase.BackColor = RGB(255, 255, 255)
+    StyleManagerButton cmdAdd, True
+    StyleManagerButton cmdRename, False
+    StyleManagerButton cmdDelete, False
+    StyleManagerButton cmdClose, False
+End Sub
+
+Private Sub StyleManagerButton(ByVal button As Object, ByVal primary As Boolean)
+    button.Font.Name = "Segoe UI"
+    button.Font.Size = 9
+    If primary Then
+        button.BackColor = RGB(54, 69, 79)
+        button.ForeColor = RGB(255, 255, 255)
+        button.Font.Bold = True
+    Else
+        button.BackColor = RGB(226, 232, 240)
+        button.ForeColor = RGB(31, 41, 55)
+    End If
 End Sub
 
 Private Sub ReloadPhrases()

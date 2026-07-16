@@ -176,29 +176,29 @@ function Add-PrefillForm {
     $component = $VBProject.VBComponents.Add(3)
     $component.Name = "frmPrefill"
     $component.Properties.Item("Caption").Value = "Formulář pro předvyplnění"
-    $component.Properties.Item("Width").Value = 760
-    $component.Properties.Item("Height").Value = 560
+    $component.Properties.Item("Width").Value = 620
+    $component.Properties.Item("Height").Value = 540
     $designer = $component.Designer
 
-    $header = Add-Control $designer "Forms.Label.1" "lblHeader" "FORMULÁŘ PRO PŘEDVYPLNĚNÍ" 0 0 752 44
-    $header.BackColor = 7487778
+    $header = Add-Control $designer "Forms.Label.1" "lblHeader" "FORMULÁŘ PRO PŘEDVYPLNĚNÍ" 0 0 612 44
+    $header.BackColor = 5195062
     $header.ForeColor = 16777215
     $header.TextAlign = 2
 
-    [void](Add-Control $designer "Forms.Label.1" "lblCount" "" 18 55 700 20)
+    [void](Add-Control $designer "Forms.Label.1" "lblCount" "" 18 55 565 20)
 
-    $sheets = Add-Control $designer "Forms.ListBox.1" "lstSheets" $null 18 82 180 330
+    $sheets = Add-Control $designer "Forms.ListBox.1" "lstSheets" $null 18 82 136 308
     $sheets.MultiSelect = 1
 
-    $frame = Add-Control $designer "Forms.Frame.1" "fraPhrases" "Nalezená slovní spojení a hodnoty" 215 82 515 330
+    $frame = Add-Control $designer "Forms.Frame.1" "fraPhrases" "Nalezená slovní spojení a hodnoty" 160 82 437 308
     $frame.ScrollBars = 2
     $frame.KeepScrollBarsVisible = 2
 
-    [void](Add-Control $designer "Forms.CommandButton.1" "cmdRefresh" "Obnovit výskyty" 18 425 180 28)
-    [void](Add-Control $designer "Forms.CommandButton.1" "cmdManage" "Spravovat slovní spojení" 215 425 170 28)
-    [void](Add-Control $designer "Forms.CommandButton.1" "cmdCancel" "Zrušit" 555 475 80 30)
+    [void](Add-Control $designer "Forms.CommandButton.1" "cmdRefresh" "Obnovit výskyty" 18 408 136 28)
+    [void](Add-Control $designer "Forms.CommandButton.1" "cmdManage" "Spravovat slovní spojení" 160 408 160 28)
+    [void](Add-Control $designer "Forms.CommandButton.1" "cmdCancel" "Zrušit" 408 456 80 30)
 
-    $save = Add-Control $designer "Forms.CommandButton.1" "cmdSave" "Použít změny" 645 475 85 30
+    $save = Add-Control $designer "Forms.CommandButton.1" "cmdSave" "Použít změny" 496 456 96 30
     $save.Default = $true
 
     $code = Get-VbaCode -Path (Join-Path $formsRoot "frmPrefill.frm")
@@ -216,8 +216,11 @@ function Add-PhraseManagerForm {
     $component.Properties.Item("Height").Value = 390
     $designer = $component.Designer
 
-    [void](Add-Control $designer "Forms.Label.1" "lblInfo" "Uložená slovní spojení" 16 16 470 20)
-    [void](Add-Control $designer "Forms.ListBox.1" "lstPhrases" $null 16 42 470 230)
+    $managerHeader = Add-Control $designer "Forms.Label.1" "lblInfo" "ULOŽENÁ SLOVNÍ SPOJENÍ" 0 0 512 44
+    $managerHeader.BackColor = 5195062
+    $managerHeader.ForeColor = 16777215
+    $managerHeader.TextAlign = 2
+    [void](Add-Control $designer "Forms.ListBox.1" "lstPhrases" $null 16 56 470 200)
     [void](Add-Control $designer "Forms.TextBox.1" "txtPhrase" $null 16 285 270 25)
     [void](Add-Control $designer "Forms.CommandButton.1" "cmdAdd" "Přidat" 295 284 60 27)
     [void](Add-Control $designer "Forms.CommandButton.1" "cmdRename" "Přejmenovat" 360 284 75 27)
@@ -239,7 +242,13 @@ function Add-ReviewForm {
     $component.Properties.Item("Height").Value = 440
     $designer = $component.Designer
 
-    [void](Add-Control $designer "Forms.ListBox.1" "lstChanges" $null 12 12 720 320)
+    $reviewHeader = Add-Control $designer "Forms.Label.1" "lblHeader" "KONTROLA PROVEDENÝCH ZMĚN" 0 0 752 44
+    $reviewHeader.BackColor = 5195062
+    $reviewHeader.ForeColor = 16777215
+    $reviewHeader.TextAlign = 2
+    [void](Add-Control $designer "Forms.Label.1" "lblCount" "Provedené změny: 0" 16 55 710 20)
+    [void](Add-Control $designer "Forms.ListBox.1" "lstChanges" $null 16 82 710 236)
+    [void](Add-Control $designer "Forms.CommandButton.1" "cmdBack" "Zpět do formuláře" 16 345 125 28)
     [void](Add-Control $designer "Forms.CommandButton.1" "cmdGoTo" "Přejít na buňku" 250 345 105 28)
     [void](Add-Control $designer "Forms.CommandButton.1" "cmdDetail" "Detail" 363 345 75 28)
     [void](Add-Control $designer "Forms.CommandButton.1" "cmdUndo" "Zrušit změnu" 446 345 90 28)

@@ -4,6 +4,7 @@ Public gValues As Object
 Public gChanges As Collection
 Public gTargetWorkbook As Workbook
 Public gSelectedSheets As Object
+Public gReturnToPrefill As Boolean
 
 Public Const APP_NAME As String = "FormularProPredvyplneni"
 Public Const APP_SECTION As String = "Settings"

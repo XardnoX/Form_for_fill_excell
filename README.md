@@ -7,11 +7,12 @@ Kompletní zdrojový projekt Excel VBA Add-inu. Projekt neobsahuje instalační 
 - zobrazení pouze slovních spojení nalezených na vybraných viditelných listech,
 - všechny viditelné listy jsou při otevření vybrané,
 - počet výskytů každého slovního spojení,
-- editovatelný ComboBox s našeptáváním dříve zadaných hodnot,
-- žádná hodnota se při otevření automaticky nevloží,
+- prázdné vstupní pole bez rozbalovacího tlačítka,
+- automatické napovídání podle dříve použitých hodnot při psaní,
 - správa, přejmenování a odstranění slovních spojení,
 - kontrola duplicitních zásahů do stejné cílové buňky,
 - revizní okno a vrácení jedné nebo všech změn,
+- návrat z revizního okna zpět do formuláře,
 - obnova původní hodnoty, vzorce, číselného formátu a výplně.
 
 ## Import do vývojového XLSM

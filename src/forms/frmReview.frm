@@ -1,9 +1,17 @@
 ﻿VERSION 5.00
 Begin VB.UserForm frmReview
    Caption         =   "Kontrola provedených změn"
+   BackColor       =   &H00F4F1ED&
    ClientHeight    =   6000
    ClientWidth     =   11400
    StartUpPosition =   1
+   Begin VB.CommandButton cmdBack
+      Caption         =   "Zpět do formuláře"
+      Height          =   420
+      Left            =   240
+      Top             =   5340
+      Width           =   1920
+   End
    Begin VB.CommandButton cmdFinish
       Caption         =   "Dokončit"
       Default         =   -1
@@ -41,17 +49,70 @@ Begin VB.UserForm frmReview
       Width           =   1680
    End
    Begin VB.ListBox lstChanges
-      Height          =   4680
+      Height          =   3540
       Left            =   240
-      Top             =   240
+      Top             =   1500
       Width           =   10920
+   End
+   Begin VB.Label lblCount
+      Caption         =   "Provedené změny: 0"
+      Height          =   300
+      Left            =   240
+      Top             =   1020
+      Width           =   10920
+   End
+   Begin VB.Label lblHeader
+      BackColor       =   &H004F4536&
+      Caption         =   "KONTROLA PROVEDENÝCH ZMĚN"
+      ForeColor       =   &H00FFFFFF&
+      Height          =   600
+      Left            =   0
+      TextAlign       =   2
+      Top             =   0
+      Width           =   11400
    End
 End
 Attribute VB_Name = "frmReview"
 Option Explicit
 
 Private Sub UserForm_Initialize()
+    ApplyVisualStyle
     RefreshList
+End Sub
+
+Private Sub ApplyVisualStyle()
+    Me.BackColor = RGB(244, 241, 237)
+    Me.Font.Name = "Segoe UI"
+    Me.Font.Size = 9
+    With lblHeader
+        .BackColor = RGB(54, 69, 79)
+        .ForeColor = RGB(255, 255, 255)
+        .Font.Name = "Segoe UI Semibold"
+        .Font.Size = 13
+        .Font.Bold = True
+    End With
+    lblCount.ForeColor = RGB(75, 85, 99)
+    lblCount.Font.Bold = True
+    lstChanges.BackColor = RGB(255, 255, 255)
+    StyleReviewButton cmdBack, False
+    StyleReviewButton cmdGoTo, False
+    StyleReviewButton cmdDetail, False
+    StyleReviewButton cmdUndo, False
+    StyleReviewButton cmdUndoAll, False
+    StyleReviewButton cmdFinish, True
+End Sub
+
+Private Sub StyleReviewButton(ByVal button As Object, ByVal primary As Boolean)
+    button.Font.Name = "Segoe UI"
+    button.Font.Size = 9
+    If primary Then
+        button.BackColor = RGB(54, 69, 79)
+        button.ForeColor = RGB(255, 255, 255)
+        button.Font.Bold = True
+    Else
+        button.BackColor = RGB(226, 232, 240)
+        button.ForeColor = RGB(31, 41, 55)
+    End If
 End Sub
 
 Private Sub RefreshList()
@@ -60,6 +121,19 @@ Private Sub RefreshList()
     For Each record In gChanges
         lstChanges.AddItem record.Summary
     Next record
+    lblCount.Caption = "Provedené změny: " & CStr(gChanges.Count)
+End Sub
+
+Private Sub cmdBack_Click()
+    UndoAllChanges
+    If gChanges.Count > 0 Then
+        RefreshList
+        MsgBox "Některé změny nelze vrátit, proto se zatím nelze vrátit do formuláře. " & _
+               "Zkontrolujte, zda nejsou listy zamčené.", vbExclamation, TOOL_TITLE
+        Exit Sub
+    End If
+    gReturnToPrefill = True
+    Unload Me
 End Sub
 
 Private Function SelectedIndex() As Long
