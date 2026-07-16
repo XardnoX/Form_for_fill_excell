@@ -25,6 +25,7 @@ Doporučený vývoj probíhá v samostatném `.xlsm` sešitu. Zdrojové soubory 
 - číslo, datum, text a logická hodnota,
 - vrácení jedné změny a vrácení všech změn,
 - napovídání dříve použitých hodnot bez automatického vložení a zadání nové hodnoty,
+- import UTF-8 TXT s prázdnými řádky a duplicitami a export pouze uživatelských frází,
 - návrat z kontroly zpět do formuláře a bezpečné vrácení aplikovaných změn,
 - zavření prázdné kontroly křížkem a potvrzení vrácení neuložených změn,
 - automatický centrovaný přechod na vybranou změnu a cyklická navigace tlačítky nahoru/dolů,

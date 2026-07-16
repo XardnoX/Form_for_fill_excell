@@ -243,8 +243,9 @@ function Add-PhraseManagerForm {
     [void](Add-Control $designer "Forms.ListBox.1" "lstPhrases" $null 16 56 470 200)
     [void](Add-Control $designer "Forms.TextBox.1" "txtPhrase" $null 16 285 270 25)
     [void](Add-Control $designer "Forms.CommandButton.1" "cmdAdd" "Přidat" 295 284 60 27)
-    [void](Add-Control $designer "Forms.CommandButton.1" "cmdRename" "Přejmenovat" 360 284 75 27)
-    [void](Add-Control $designer "Forms.CommandButton.1" "cmdDelete" "Odstranit" 440 284 60 27)
+    [void](Add-Control $designer "Forms.CommandButton.1" "cmdDelete" "Odstranit" 360 284 75 27)
+    [void](Add-Control $designer "Forms.CommandButton.1" "cmdImport" "Import TXT" 16 325 96 28)
+    [void](Add-Control $designer "Forms.CommandButton.1" "cmdExport" "Export TXT" 120 325 96 28)
     [void](Add-Control $designer "Forms.CommandButton.1" "cmdClose" "Zavřít" 420 325 80 28)
 
     $code = Get-VbaCode -Path (Join-Path $formsRoot "frmPhraseManager.frm")

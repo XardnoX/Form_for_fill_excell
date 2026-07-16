@@ -115,6 +115,8 @@ Public Function LoadPhrases() As Collection
         AddUnique result, "Název odlitku:"
         AddUnique result, "Operace:"
         AddUnique result, "Stroj:"
+        AddUnique result, "Schválil:"
+        AddUnique result, "Ověřil:"
 
     SavePhrases result
 
@@ -156,6 +158,22 @@ Public Sub AddUnique( _
 
     items.Add value
 End Sub
+
+Public Function IsRequiredPhrase(ByVal phrase As String) As Boolean
+    Select Case LCase$(Trim$(phrase))
+        Case LCase$("Vypracoval:"), _
+             LCase$("Ověřil a schválil:"), _
+             LCase$("Rozdělovník:"), _
+             LCase$("První vydání:"), _
+             LCase$("Číslo/datum revize:"), _
+             LCase$("Zákazník:"), _
+             LCase$("Číslo odlitku:"), _
+             LCase$("Název odlitku:"), _
+             LCase$("Operace:"), _
+             LCase$("Stroj:")
+            IsRequiredPhrase = True
+    End Select
+End Function
 
 Public Function PhrasesInSelectedSheets( _
     ByVal allPhrases As Collection _
