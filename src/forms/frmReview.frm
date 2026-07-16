@@ -89,6 +89,27 @@ Private Sub UserForm_Initialize()
     RefreshList
 End Sub
 
+Private Sub UserForm_Activate()
+    EnableMouseWheel Me
+End Sub
+
+Private Sub UserForm_Terminate()
+    DisableMouseWheel
+End Sub
+
+Public Function HandleMouseWheel(ByVal screenX As Long, ByVal screenY As Long, _
+                                 ByVal delta As Long) As Boolean
+    Dim x As Single, y As Single
+    On Error GoTo Unsupported
+    If Not MousePointInForm(Me, screenX, screenY, x, y) Then Exit Function
+    If x >= lstChanges.left And x <= lstChanges.left + lstChanges.Width And _
+       y >= lstChanges.top And y <= lstChanges.top + lstChanges.Height Then
+        ScrollListByWheel lstChanges, delta
+        HandleMouseWheel = True
+    End If
+Unsupported:
+End Function
+
 Private Sub ApplyVisualStyle()
     Me.BackColor = RGB(244, 241, 237)
     Me.Font.Name = "Segoe UI"
@@ -193,8 +214,28 @@ Private Sub cmdFinish_Click()
 End Sub
 
 Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
-    If CloseMode = 0 Then
+    Dim answer As VbMsgBoxResult
+
+    If CloseMode <> 0 Then Exit Sub
+    If gChanges Is Nothing Then Exit Sub
+    If gChanges.Count = 0 Then Exit Sub
+
+    answer = MsgBox( _
+        "Opravdu chcete zavřít okno bez uložení změn?" & vbCrLf & _
+        "Provedené změny budou vráceny.", _
+        vbYesNo + vbQuestion + vbDefaultButton2, _
+        TOOL_TITLE)
+
+    If answer = vbNo Then
         Cancel = True
-        MsgBox "Kontrolu ukončete tlačítkem Dokončit.", vbInformation, TOOL_TITLE
+        Exit Sub
+    End If
+
+    UndoAllChanges
+    If gChanges.Count > 0 Then
+        Cancel = True
+        RefreshList
+        MsgBox "Některé změny nelze vrátit. Zkontrolujte, zda nejsou listy zamčené.", _
+               vbExclamation, TOOL_TITLE
     End If
 End Sub

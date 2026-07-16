@@ -23,16 +23,9 @@ Begin VB.UserForm frmPrefill
    Begin VB.CommandButton cmdManage
       Caption         =   "Spravovat slovní spojení"
       Height          =   420
-      Left            =   2520
-      Top             =   6120
-      Width           =   2400
-   End
-   Begin VB.CommandButton cmdRefresh
-      Caption         =   "Obnovit výskyty"
-      Height          =   420
       Left            =   240
       Top             =   6120
-      Width           =   2040
+      Width           =   2400
    End
    Begin VB.ListBox lstSheets
       Height          =   3420
@@ -70,11 +63,18 @@ Begin VB.UserForm frmPrefill
       Width           =   2040
    End
    Begin VB.Frame fraPhrases
-      Caption         =   "Nalezená slovní spojení a hodnoty"
-      Height          =   4620
+      Caption         =   ""
+      Height          =   4380
       Left            =   2400
       ScrollBars      =   2
-      Top             =   1260
+      Top             =   1380
+      Width           =   6560
+   End
+   Begin VB.Label lblPhrasesHeader
+      Caption         =   "Nalezená slovní spojení a hodnoty"
+      Height          =   240
+      Left            =   2400
+      Top             =   1140
       Width           =   6560
    End
    Begin VB.Label lblCount
@@ -133,6 +133,31 @@ Private Sub UserForm_Initialize()
     RefreshContent
 End Sub
 
+Private Sub UserForm_Activate()
+    EnableMouseWheel Me
+End Sub
+
+Private Sub UserForm_Terminate()
+    DisableMouseWheel
+End Sub
+
+Public Function HandleMouseWheel(ByVal screenX As Long, ByVal screenY As Long, _
+                                 ByVal delta As Long) As Boolean
+    Dim x As Single, y As Single
+    On Error GoTo Unsupported
+    If Not MousePointInForm(Me, screenX, screenY, x, y) Then Exit Function
+    If x >= lstSheets.left And x <= lstSheets.left + lstSheets.Width And _
+       y >= lstSheets.top And y <= lstSheets.top + lstSheets.Height Then
+        ScrollListByWheel lstSheets, delta
+        HandleMouseWheel = True
+    ElseIf x >= fraPhrases.left And x <= fraPhrases.left + fraPhrases.Width And _
+           y >= fraPhrases.top And y <= fraPhrases.top + fraPhrases.Height Then
+        ScrollFrameByWheel fraPhrases, delta
+        HandleMouseWheel = True
+    End If
+Unsupported:
+End Function
+
 Private Sub ApplyVisualStyle()
     Me.BackColor = RGB(244, 241, 237)
     Me.Font.Name = "Segoe UI"
@@ -155,8 +180,9 @@ Private Sub ApplyVisualStyle()
     lblSheetSearch.ForeColor = RGB(75, 85, 99)
     lblSheetSearch.Font.Bold = True
     lblAllSheets.ForeColor = RGB(55, 65, 81)
+    lblPhrasesHeader.ForeColor = RGB(54, 69, 79)
+    lblPhrasesHeader.Font.Bold = True
 
-    StyleButton cmdRefresh, False
     StyleButton cmdManage, False
     StyleButton cmdCancel, False
     StyleButton cmdSave, True
@@ -201,6 +227,7 @@ Private Sub lstSheets_Change()
     mUpdatingSheetControls = True
     chkAllSheets.Value = False
     mUpdatingSheetControls = False
+    RefreshContent
 End Sub
 
 Private Sub chkAllSheets_Click()
@@ -211,6 +238,7 @@ Private Sub chkAllSheets_Click()
         If ws.Visible = xlSheetVisible Then mSheetSelection(ws.Name) = selectAll
     Next ws
     PopulateSheetList
+    RefreshContent
 End Sub
 
 Private Sub StyleButton(ByVal button As Object, ByVal primary As Boolean)
@@ -273,10 +301,6 @@ Private Sub RefreshContent()
     End If
     fraPhrases.ScrollHeight = y + 18
     lblCount.Caption = CStr(mVisiblePhrases.Count) & " slovních spojení na " & CStr(gSelectedSheets.Count) & " vybraných listech"
-End Sub
-
-Private Sub cmdRefresh_Click()
-    RefreshContent
 End Sub
 
 Private Sub cmdManage_Click()

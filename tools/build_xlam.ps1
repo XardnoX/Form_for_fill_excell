@@ -19,6 +19,7 @@ New-Item -ItemType Directory -Force (Split-Path -Parent $Output) | Out-Null
 
 $required = @(
     (Join-Path $vbaRoot "modGlobals.bas"),
+    (Join-Path $vbaRoot "modMouseWheel.bas"),
     (Join-Path $vbaRoot "modValueHistory.bas"),
     (Join-Path $vbaRoot "CChangeRecord.cls"),
     (Join-Path $vbaRoot "modPrefillEngine.bas"),
@@ -202,12 +203,12 @@ function Add-PrefillForm {
     $sheets = Add-Control $designer "Forms.ListBox.1" "lstSheets" $null 18 158 136 232
     $sheets.MultiSelect = 1
 
-    $frame = Add-Control $designer "Forms.Frame.1" "fraPhrases" "Nalezená slovní spojení a hodnoty" 160 82 437 308
+    [void](Add-Control $designer "Forms.Label.1" "lblPhrasesHeader" "Nalezená slovní spojení a hodnoty" 160 78 437 16)
+    $frame = Add-Control $designer "Forms.Frame.1" "fraPhrases" "" 160 94 437 296
     $frame.ScrollBars = 2
     $frame.KeepScrollBarsVisible = 2
 
-    [void](Add-Control $designer "Forms.CommandButton.1" "cmdRefresh" "Obnovit výskyty" 18 408 136 28)
-    [void](Add-Control $designer "Forms.CommandButton.1" "cmdManage" "Spravovat slovní spojení" 160 408 160 28)
+    [void](Add-Control $designer "Forms.CommandButton.1" "cmdManage" "Spravovat slovní spojení" 18 408 160 28)
     [void](Add-Control $designer "Forms.CommandButton.1" "cmdCancel" "Zrušit" 408 456 80 30)
 
     $save = Add-Control $designer "Forms.CommandButton.1" "cmdSave" "Použít změny" 496 456 96 30
@@ -303,6 +304,7 @@ try {
 
     # Standardní moduly: 1 = vbext_ct_StdModule.
     [void](Add-VbaComponent $vbProject 1 "modGlobals" (Join-Path $vbaRoot "modGlobals.bas"))
+    [void](Add-VbaComponent $vbProject 1 "modMouseWheel" (Join-Path $vbaRoot "modMouseWheel.bas"))
     [void](Add-VbaComponent $vbProject 1 "modValueHistory" (Join-Path $vbaRoot "modValueHistory.bas"))
 
     # Třída: 2 = vbext_ct_ClassModule.

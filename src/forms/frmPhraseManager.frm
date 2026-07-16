@@ -74,6 +74,27 @@ Private Sub UserForm_Initialize()
     ReloadPhrases
 End Sub
 
+Private Sub UserForm_Activate()
+    EnableMouseWheel Me
+End Sub
+
+Private Sub UserForm_Terminate()
+    DisableMouseWheel
+End Sub
+
+Public Function HandleMouseWheel(ByVal screenX As Long, ByVal screenY As Long, _
+                                 ByVal delta As Long) As Boolean
+    Dim x As Single, y As Single
+    On Error GoTo Unsupported
+    If Not MousePointInForm(Me, screenX, screenY, x, y) Then Exit Function
+    If x >= lstPhrases.left And x <= lstPhrases.left + lstPhrases.Width And _
+       y >= lstPhrases.top And y <= lstPhrases.top + lstPhrases.Height Then
+        ScrollListByWheel lstPhrases, delta
+        HandleMouseWheel = True
+    End If
+Unsupported:
+End Function
+
 Private Sub ApplyVisualStyle()
     Me.BackColor = RGB(244, 241, 237)
     Me.Font.Name = "Segoe UI"

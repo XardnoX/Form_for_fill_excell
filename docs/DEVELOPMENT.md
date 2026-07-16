@@ -5,12 +5,13 @@ Doporučený vývoj probíhá v samostatném `.xlsm` sešitu. Zdrojové soubory 
 ## Doporučené pořadí importu
 
 1. `modGlobals.bas`
-2. `modValueHistory.bas`
-3. `CChangeRecord.cls`
-4. `modPrefillEngine.bas`
-5. `frmPrefill.frm`
-6. `frmPhraseManager.frm`
-7. `frmReview.frm`
+2. `modMouseWheel.bas`
+3. `modValueHistory.bas`
+4. `CChangeRecord.cls`
+5. `modPrefillEngine.bas`
+6. `frmPrefill.frm`
+7. `frmPhraseManager.frm`
+8. `frmReview.frm`
 
 ## Testovací scénáře
 
@@ -24,4 +25,6 @@ Doporučený vývoj probíhá v samostatném `.xlsm` sešitu. Zdrojové soubory 
 - číslo, datum, text a logická hodnota,
 - vrácení jedné změny a vrácení všech změn,
 - napovídání dříve použitých hodnot bez automatického vložení a zadání nové hodnoty,
-- návrat z kontroly zpět do formuláře a bezpečné vrácení aplikovaných změn.
+- návrat z kontroly zpět do formuláře a bezpečné vrácení aplikovaných změn,
+- zavření prázdné kontroly křížkem a potvrzení vrácení neuložených změn,
+- rolování seznamů a oblasti frází kolečkem myši; při nepodporovaném API zůstávají funkční scrollbary.

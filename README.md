@@ -17,6 +17,7 @@ Ribbon používá samostatnou čtvercovou ikonu `assets/MR_Helper_ribbon.png` be
 - kontrola duplicitních zásahů do stejné cílové buňky,
 - revizní okno a vrácení jedné nebo všech změn,
 - návrat z revizního okna zpět do formuláře,
+- volitelné rolování seznamů a hodnot kolečkem myši s tichým fallbackem na scrollbary,
 - obnova původní hodnoty, vzorce, číselného formátu a výplně.
 
 ## Import do vývojového XLSM
